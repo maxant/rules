@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ch.maxant</groupId>
+		<artifactId>rules-parent</artifactId>
+		<version>2.1.0-SNAPSHOT</version>
+        <relativePath>../rules-parent</relativePath>
+	</parent>
+	<artifactId>rules-javatest</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+		<dependency>
+			<groupId>ch.maxant</groupId>
+			<artifactId>rules</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+<!--            <version>${project.version}</version> -->
+			<scope>test</scope>
+		</dependency>
+    </dependencies>
+	
+</project>

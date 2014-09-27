@@ -18,9 +18,8 @@
 	</properties>
 	<modules>
         <module>../rules</module>
-<!--        <module>../rules-javatest</module>
+        <module>../rules-javatest</module>
         <module>../rules-scalatest</module>
--->
 	</modules>
 
     <dependencies>
@@ -73,6 +72,10 @@
 						</goals>
 					</execution>
 				</executions>				
+				<configuration>
+					<arg>-encoding</arg>
+					<arg>${project.build.sourceEncoding}</arg>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

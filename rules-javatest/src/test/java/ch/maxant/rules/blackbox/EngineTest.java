@@ -52,7 +52,7 @@ public class EngineTest {
 	 */
 	@Test
 	public void test2() throws DuplicateNameException, CompileException, ParseException {
-		Rule rule1 = new Rule("R1", "input.p1.name == \"ant\" && input.p2.name == \"clare\"", "outcome1", 0, "ch.maxant.produkte", "Spezi Regel für Familie Kutschera");
+		Rule rule1 = new Rule("R1", "input.p1.name == \"ant\" && input.p2.name == \"clare\"", "outcome1", 0, "ch.maxant.produkte", "Spezi Regel fÃ¼r Familie Kutschera");
 		Rule rule2 = new Rule("R2", "true", "outcome2", 1, "ch.maxant.produkte", "Default Regel");
 		List<Rule> rules = Arrays.asList(rule1, rule2);
 

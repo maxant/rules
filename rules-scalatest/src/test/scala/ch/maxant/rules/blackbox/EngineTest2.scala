@@ -35,7 +35,7 @@ class EngineTest2 {
      */
     @Test
     def test1() {
-        val rule1 = new Rule("R1", """input.p1.name == "ant" && input.p2.name == "clare" """, "outcome1", 1, "ch.maxant.produkte", "Spezi Regel für Familie Kutschera")
+        val rule1 = new Rule("R1", """input.p1.name == "ant" && input.p2.name == "clare" """, "outcome1", 1, "ch.maxant.produkte", "Spezi Regel fÃ¼r Familie Kutschera")
         val rule2 = new Rule("R2", "true", "outcome2", 0, "ch.maxant.produkte", "Default Regel")
         val rules = List(rule1, rule2)
 
