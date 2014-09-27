@@ -1,9 +1,0 @@
-R:\maxant\tools\ch.maxant.rules\target\classes;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\configuration\org.eclipse.osgi\bundles\1769\1\.cp\lib\scala-swing.jar;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\configuration\org.eclipse.osgi\bundles\1769\1\.cp\lib\scala-actors.jar;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\configuration\org.eclipse.osgi\bundles\1768\1\.cp\lib\scala-reflect.jar;D:\download\mvel2-2.0.19.jar;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\plugins\org.junit_4.10.0.v4_10_0_v20120426-0900\junit.jar;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar;W:\training6_scalabook\eclipse-jee-juno-SR1-win32-x86_64-4.2.1-with-scala-ide-2.10\configuration\org.eclipse.osgi\bundles\1769\1\.cp\lib\scala-library.jar
--------
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\AbstractAction.java -> R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\AbstractAction.java
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\AbstractAction.java -> R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\IAction.java
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\IAction.java -> R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\IAction.java
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\Action.scala -> R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\AbstractAction.java
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\Action.scala -> R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\Action.scala
--------
-R:\maxant\tools\ch.maxant.rules\src\main\scala\ch\maxant\rules\Action.scala -> R:\maxant\tools\ch.maxant.rules\target\classes\ch\maxant\rules\Action.class
