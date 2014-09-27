@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ch.maxant</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</parent>
 	<groupId>ch.maxant</groupId>
 	<artifactId>rules-parent</artifactId>
@@ -13,29 +13,10 @@
     <url>http://blog.maxant.co.uk/pebble/2011/11/12/1321129560000.html</url>
 	<properties>
 		<maven-scala-plugin-version>2.15.2</maven-scala-plugin-version>
-		<mvel2-version>2.2.1.Final</mvel2-version>
-		<scala-library-version>2.11.2</scala-library-version>
 	</properties>
 	<modules>
         <module>../rules</module>
-        <module>../rules-javatest</module>
-        <module>../rules-scalatest</module>
 	</modules>
-
-    <dependencies>
-		<dependency>
-			<!-- added for expression language used by the rule engine -->
-			<groupId>org.mvel</groupId>
-			<artifactId>mvel2</artifactId>
-			<version>${mvel2-version}</version>
-		</dependency>
-		<dependency>
-			<!-- added for the scala API -->
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>${scala-library-version}</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<!-- add scala compiler since this project relies on scala -->

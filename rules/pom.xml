@@ -7,7 +7,26 @@
 		<version>2.1.0-SNAPSHOT</version>
         <relativePath>../rules-parent</relativePath>
 	</parent>
+	<properties>
+		<mvel2-version>2.2.1.Final</mvel2-version>
+		<scala-library-version>2.11.2</scala-library-version>
+	</properties>
 	<artifactId>rules</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+		<dependency>
+			<!-- added for expression language used by the rule engine -->
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+			<version>${mvel2-version}</version>
+		</dependency>
+		<dependency>
+			<!-- added for the scala API -->
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>${scala-library-version}</version>
+		</dependency>
+	</dependencies>
 
 </project>
