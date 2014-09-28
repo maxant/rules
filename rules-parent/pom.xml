@@ -35,4 +35,17 @@
         </developer>
 	</developers>
 
+	<distributionManagement>
+		<repository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>http://192.168.1.108:8080/nexus-2.9.1-02/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>http://192.168.1.108:8080/nexus-2.9.1-02/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 </project>
