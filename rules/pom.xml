@@ -9,7 +9,6 @@
 	</parent>
 	<properties>
 		<mvel2-version>2.2.1.Final</mvel2-version>
-		<scala-library-version>2.11.2</scala-library-version>
 	</properties>
 	<artifactId>rules</artifactId>
     <packaging>jar</packaging>
@@ -21,12 +20,26 @@
 			<artifactId>mvel2</artifactId>
 			<version>${mvel2-version}</version>
 		</dependency>
-		<dependency>
-			<!-- added for the scala API -->
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>${scala-library-version}</version>
-		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<!-- build a jar with the tests in it, 
+							     so that rules-scala can depend on 
+								 test classes from this module. -->
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>	
+	
 </project>

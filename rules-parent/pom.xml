@@ -1,96 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>ch.maxant</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.1</version>
-	</parent>
 	<groupId>ch.maxant</groupId>
 	<artifactId>rules-parent</artifactId>
 	<version>2.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <url>http://blog.maxant.co.uk/pebble/2011/11/12/1321129560000.html</url>
-	<properties>
-		<maven-scala-plugin-version>2.15.2</maven-scala-plugin-version>
-	</properties>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<junit.version>4.11</junit.version>
+    </properties>
+
 	<modules>
         <module>../rules</module>
+        <module>../rules-scala</module>
 	</modules>
 
-	<build>
-		<!-- add scala compiler since this project relies on scala -->
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.scala-tools</groupId>
-					<artifactId>maven-scala-plugin</artifactId>
-					<version>${maven-scala-plugin-version}</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
-		<!-- add scala compiler since this project relies on scala -->
-		<plugins>
-			<plugin>
-				<groupId>org.scala-tools</groupId>
-				<artifactId>maven-scala-plugin</artifactId>
-				<version>${maven-scala-plugin-version}</version>
-				<executions>
-					<execution>
-						<id>scala-compile-first</id>
-						<phase>process-resources</phase>
-						<goals>
-						    <goal>add-source</goal>
-							<goal>compile</goal>
-						</goals>
-					</execution>									
-					<execution>
-						<id>scala-test-compile</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>				
-				<configuration>
-					<arg>-encoding</arg>
-					<arg>${project.build.sourceEncoding}</arg>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-	<!-- add scala compiler since this project relies on scala -->
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.scala-tools</groupId>
-				<artifactId>maven-scala-plugin</artifactId>
-				<version>${maven-scala-plugin-version}</version>
-			</plugin>
-		</plugins>
-	</reporting>
+    <dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 	
-	
-	
-	<!-- special for this project since it relies on scala -->
-	<repositories>
-		<repository>
-			<id>scala-tools.org</id>
-			<name>Scala-tools Maven2 Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/scala-tools/</url>
-		</repository>
-
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>scala-tools.org</id>
-			<name>Scala-tools Maven2 Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/scala-tools/</url>
-		</pluginRepository>
-	</pluginRepositories>
-
     <developers>
         <developer>
             <id>ant</id>

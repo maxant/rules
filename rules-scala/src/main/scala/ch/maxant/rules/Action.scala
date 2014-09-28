@@ -15,17 +15,11 @@
  * You should have received a copy of the Lesser GNU General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+package ch.maxant.rules
 
-import ch.maxant.rules.blackbox.*;
+class Action[I,O](name: String)(f: I => O) extends AbstractAction[I,O](name) {
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-    AllJavaTests.class,
-	EngineTest2.class,
-	ScalaTests.class })
-public class AllTests {
-
+    def execute(input: I) = {
+        f(input)
+    }
 }
