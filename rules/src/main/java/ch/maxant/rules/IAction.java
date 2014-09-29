@@ -22,17 +22,10 @@ package ch.maxant.rules;
  * the winning rules outcome is equal to the actions name.
  * @param <Input> The input type, see {@link #execute(Object)}
  * @param <Output> The output type, see {@link #execute(Object)}
- * @see AbstractAction, which is typically what applications override.
+ * @see {@link AbstractAction}, which is typically what applications override.
+ * @see {@link ExecutableAction}.
  */
-public interface IAction<Input, Output> {
-
-	/**
-	 * Called by the {@link Engine} when the associated rule is the winning rule.
-	 * @see Engine#executeBestAction(String, Object, Class)
-	 * @param input a bean containing all the attributes required by the expression contained in the associated rule.
-	 * @return implementation specific
-	 */
-	Output execute(Input input);
+public interface IAction<Input, Output> extends ExecutableAction<Input, Output> {
 
 	/** @return the unique name of this action.  the engine compares this name to the outcome from rules to decide if the action should be executed. */
 	String getName();

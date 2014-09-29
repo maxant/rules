@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -15,16 +15,19 @@
  * You should have received a copy of the Lesser GNU General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+package ch.maxant.rules;
 
-import ch.maxant.rules.blackbox.*;
+/**
+ * A functional interface, so that we can write actions using java 8 lambdas.
+ */
+public interface ExecutableAction<Input, Output> {
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	EngineTest2.class,
-	ScalaTests.class })
-public class AllScalaTests {
+	/**
+	 * Called by the {@link Engine} when the associated rule is the winning rule.
+	 * @see Engine#executeBestAction(String, Object, Class)
+	 * @param input a bean containing all the attributes required by the expression contained in the associated rule.
+	 * @return implementation specific
+	 */
+	Output execute(Input input);
 
 }

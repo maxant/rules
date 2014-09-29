@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 import org.mvel2.MVEL;
 
 /**
- * A Rule Engine.  Can evaluate rules and execute {@link AbstractAction}s or simply provide an 
+ * A Rule Engine.  Can evaluate rules and execute {@link IAction}s or simply provide an 
  * ordered list of the best matching {@link Rule}s.<br>
  * <br>
  * A fuller explanation of how to use rules can be found in the Javadoc for {@link Rule}s.<br>
@@ -211,7 +211,7 @@ public class Engine {
 	}
 
 	/**
-	 * @see #getBestOutcome(String, Object), except that all namespaces will be considered.
+	 * @see #getBestOutcome(Object), except that all namespaces will be considered.
 	 */
 	public <Input> String getBestOutcome(Input input) throws NoMatchingRuleFoundException {
 		return getBestOutcome(null, input);
@@ -237,7 +237,7 @@ public class Engine {
 	/**
 	 * @see #executeBestAction(String, Object, Collection), except that all namespaces will be considered.
 	 */
-	public <Input, Output> Output executeBestAction(Input input, Collection<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+	public <Input, Output> Output executeBestAction(Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		return executeBestAction(null, input, actions);
 	}
 
@@ -246,14 +246,14 @@ public class Engine {
 	 * @param nameSpacePattern optional.  if not null, then only rules with matching namespaces are evaluated.
 	 * @param input the Object containing all inputs to the expression language rule.
 	 * @param actions a collection of actions containing one action per possible outcome.  The action whose name is equal to the winning outcome will be executed.
-	 * @return The result of the {@link AbstractAction} with the same name as the winning rules outcome.
+	 * @return The result of the {@link IAction} with the same name as the winning rules outcome.
 	 * @throws NoMatchingRuleFoundException If no matching rule was found.  Rules must evaluate to true in order to be candidates.
 	 * @throws NoActionFoundException If no action with a name matching the winning rules outcome was found.
 	 * @throws DuplicateNameException if any actions have the same name.
 	 */
-	public <Input, Output> Output executeBestAction(String nameSpacePattern, Input input, Collection<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+	public <Input, Output> Output executeBestAction(String nameSpacePattern, Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		
-		Map<String, AbstractAction<Input, Output>> actionsMap = validateActions(actions);
+		Map<String, IAction<Input, Output>> actionsMap = validateActions(actions);
 		
 		return actionsMap.get(getBestOutcome(nameSpacePattern, input)).execute(input);
 	}
@@ -261,7 +261,7 @@ public class Engine {
 	/**
 	 * @see #executeAllActions(String, Object, Collection), except that all namespaces will be considered.
 	 */
-	public <Input, Output> void executeAllActions(Input input, Collection<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+	public <Input, Output> void executeAllActions(Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		executeAllActions(null, input, actions);
 	}
 	
@@ -278,9 +278,9 @@ public class Engine {
 	 * @throws NoActionFoundException If no action with a name matching the winning rules outcome was found.
 	 * @throws DuplicateNameException if any actions have the same name.
 	 */
-	public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, Collection<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+	public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		
-		Map<String, AbstractAction<Input, Output>> actionsMap = validateActions(actions);
+		Map<String, IAction<Input, Output>> actionsMap = validateActions(actions);
 		
 		List<Rule> matchingRules = getMatchingRules(nameSpacePattern, input);
 		
@@ -298,10 +298,10 @@ public class Engine {
 	
 	}
 	
-	private <Input, Output> Map<String, AbstractAction<Input, Output>> validateActions(Collection<AbstractAction<Input, Output>> actions) throws DuplicateNameException, NoActionFoundException{
+	private <Input, Output> Map<String, IAction<Input, Output>> validateActions(Collection<? extends IAction<Input, Output>> actions) throws DuplicateNameException, NoActionFoundException{
 		//do any actions have duplicate names?
-		Map<String, AbstractAction<Input, Output>> actionsMap = new HashMap<String, AbstractAction<Input, Output>>();
-		for(AbstractAction<Input, Output> a : actions){
+		Map<String, IAction<Input, Output>> actionsMap = new HashMap<String, IAction<Input, Output>>();
+		for(IAction<Input, Output> a : actions){
 			if(actionsMap.containsKey(a.getName())){
 				throw new DuplicateNameException("The name " + a.getName() + " was found in a different action.  Action names must be unique.");
 			}else{
@@ -371,14 +371,14 @@ public class Engine {
 	private static final class CompiledRule {
 		private Rule rule;
 		private Serializable compiled;
-		public CompiledRule(Rule rule) {
+		private CompiledRule(Rule rule) {
 			this.rule = rule;
 			this.compiled = MVEL.compileExpression(rule.getExpression());
 		}
-		public Serializable getCompiled() {
+		private Serializable getCompiled() {
 			return compiled;
 		}
-		public Rule getRule() {
+		private Rule getRule() {
 			return rule;
 		}
 	}

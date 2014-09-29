@@ -24,14 +24,29 @@ package ch.maxant.rules;
  */
 public class ScalaEngine extends Engine {
 
-	/** @see #Engine(Collection, boolean).  Supports Scala collections. */
+	/** @see Engine#Engine(java.util.Collection, boolean).  Supports Scala collections. */
 	public ScalaEngine(final scala.collection.Iterable<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 	    super(scala.collection.JavaConversions.asJavaCollection(rules), throwExceptionIfCompilationFails);
 	}
 
-	/** @see #executeBestAction(Object, Collection), supports Scala collections. */
+	/** @see #executeAllActions(String, Object, java.util.Collection), supports Scala collections. */
+    public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+        executeAllActions(nameSpacePattern, input, scala.collection.JavaConversions.asJavaCollection(actions));
+    }
+    
+    /** @see #executeAllActions(Object, java.util.Collection), supports Scala collections. */
+    public <Input, Output> void executeAllActions(Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+    	executeAllActions(null, input, actions);
+    }
+    
+    /** @see #executeBestAction(Object, java.util.Collection), supports Scala collections. */
     public <Input, Output> Output executeBestAction(Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
-        return executeBestAction(input, scala.collection.JavaConversions.asJavaCollection(actions));
+    	return executeBestAction(null, input, actions);
+    }
+    
+    /** @see #executeBestAction(String, Object, java.util.Collection), supports Scala collections. */
+    public <Input, Output> Output executeBestAction(final String namespace, final Input input, final scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+    	return executeBestAction(namespace, input, scala.collection.JavaConversions.asJavaCollection(actions));
     }
     
 }

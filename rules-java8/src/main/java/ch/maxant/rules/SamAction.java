@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -15,17 +15,30 @@
  * You should have received a copy of the Lesser GNU General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+package ch.maxant.rules;
 
-import ch.maxant.rules.blackbox.*;
+/**
+ * allows you to construct an action using a lambda.
+ * @param <I> the input type of this action
+ * @param <O> the output type of this action
+ */
+public class SamAction<I, O> extends AbstractAction<I, O> {
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	ActionTest.class, 
-	RuleTest.class, 
-	EngineTest.class })
-public class AllJavaTests {
+	private final ExecutableAction<I, O> action;
+
+	/**
+	 * @param name the name of this action
+	 * @param action a lambda containing the function which should be 
+	 * 		executed when {@link #execute(Object)} is called by the {@link Engine}.
+	 */
+	public SamAction(String name, ExecutableAction<I, O> action) {
+		super(name);
+		this.action = action;
+	}
+
+	@Override
+	public O execute(I input) {
+		return action.execute(input);
+	}
 
 }

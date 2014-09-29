@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ch.maxant</groupId>
 		<artifactId>rules-parent</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>2.1.0</version>
         <relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
@@ -16,13 +16,14 @@
 
     <dependencies>
 		<dependency>
-			<!-- added for the scala API -->
+			<!-- depend on the rules library -->
 			<groupId>ch.maxant</groupId>
 			<artifactId>rules</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
+			<!-- depend on test classes from the rules library -->
 			<groupId>ch.maxant</groupId>
 			<artifactId>rules</artifactId>
 			<version>${project.version}</version>
@@ -31,7 +32,7 @@
 		</dependency>
 
 		<dependency>
-			<!-- added for the scala API -->
+			<!-- depends on Scala! -->
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
 			<version>${scala-library-version}</version>

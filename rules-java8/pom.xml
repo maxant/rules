@@ -7,18 +7,24 @@
 		<version>2.1.0</version>
         <relativePath>../rules-parent</relativePath>
 	</parent>
-	<properties>
-		<mvel2-version>2.2.1.Final</mvel2-version>
-	</properties>
-	<artifactId>rules</artifactId>
+	<artifactId>rules-java8</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
 		<dependency>
-			<!-- added for expression language used by the rule engine -->
-			<groupId>org.mvel</groupId>
-			<artifactId>mvel2</artifactId>
-			<version>${mvel2-version}</version>
+			<!-- depend on the rules library -->
+			<groupId>ch.maxant</groupId>
+			<artifactId>rules</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<!-- depend on test classes from the rules library -->
+			<groupId>ch.maxant</groupId>
+			<artifactId>rules</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -26,20 +32,13 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<goals>
-							<!-- build a jar with the tests in it, 
-							     so that rules-scala can depend on 
-								 test classes from this module. -->
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>	
-	
 </project>
