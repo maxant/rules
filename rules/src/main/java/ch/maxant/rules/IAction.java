@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -22,8 +22,7 @@ package ch.maxant.rules;
  * the winning rules outcome is equal to the actions name.
  * @param <Input> The input type, see {@link #execute(Object)}
  * @param <Output> The output type, see {@link #execute(Object)}
- * @see {@link AbstractAction}, which is typically what applications override.
- * @see {@link ExecutableAction}.
+ * See also {@link AbstractAction}, which is typically what applications override, and {@link ExecutableAction}.
  */
 public interface IAction<Input, Output> extends ExecutableAction<Input, Output> {
 

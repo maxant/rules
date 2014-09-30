@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -20,7 +20,7 @@ package ch.maxant.rules;
 /**
  * thrown when no matching rule is found.
  * 
- * @see Engine#executeBestAction(String, Object, Class)
+ * @see Engine#executeBestAction(String, Object, java.util.Collection)
  */
 public class NoMatchingRuleFoundException extends Exception {
 

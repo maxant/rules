@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -35,6 +35,9 @@ import org.mvel2.MVEL;
  * A Rule Engine.  Can evaluate rules and execute {@link IAction}s or simply provide an 
  * ordered list of the best matching {@link Rule}s.<br>
  * <br>
+ * If you are using Java 8, investigate the rules-java8 module!
+ * <br>
+ * <br>
  * A fuller explanation of how to use rules can be found in the Javadoc for {@link Rule}s.<br>
  * <br>
  * Based on MVEL expression language from Codehaus.<br>
@@ -54,16 +57,16 @@ import org.mvel2.MVEL;
  * <br>
  * <code>
  * Rule r1 = new Rule("YouthTarif",<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age < 26", new StringAction("YT2011"), 3,<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age &lt; 26", new StringAction("YT2011"), 3,<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs", null);<br>
  * Rule r2 = new Rule("SeniorTarif",<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age > 59", new StringAction("ST2011"), 3,<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age &gt; 59", new StringAction("ST2011"), 3,<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs", null);<br>
  * Rule r3 = new Rule("DefaultTarif",<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"!#YouthTarif && !#SeniorTarif", new StringAction("DT2011"), 3,<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"!#YouthTarif &amp;&amp; !#SeniorTarif", new StringAction("DT2011"), 3,<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs", null);<br>
  * Rule r4 = new Rule("LoyaltyTarif",<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"#DefaultTarif && input.account.ageInMonths > 24",<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"#DefaultTarif &amp;&amp; input.account.ageInMonths &gt; 24",<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new StringAction("LT2011"), 4,<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs", null);<br>
  * </code>
@@ -84,14 +87,14 @@ import org.mvel2.MVEL;
  * <br>
  * //will return both DT2011 and LT2011, since both are relevant.<br>
  * //Since LT2011 has a higher priority, it is first in the list.<br>
- * List<Rule> matches = engine.getMatchingRules(request);<br>
+ * List&lt;Rule&gt; matches = engine.getMatchingRules(request);<br>
  * <br>
  * // returns "LT2011", since the loyalty tarif has a higher priority<br>
  * String tarif = engine.runBestAction(request, String.class); <br>
  * </code>
  * <br>
- * See {@link Rule} for more details.  See {@link ch.maxant.rules.blackbox.EngineTest} for more examples.  See {@link http://mvel.codehaus.org}
- * for full details of the expression language.
+ * See {@link Rule} for more details.  See <code>EngineTest</code> for more examples.  
+ * See <a href='http://mvel.codehaus.org'>http://mvel.codehaus.org</a> for full details of the expression language.
  */
 public class Engine {
 
@@ -211,7 +214,8 @@ public class Engine {
 	}
 
 	/**
-	 * @see #getBestOutcome(Object), except that all namespaces will be considered.
+	 * See {@link #getBestOutcome(Object)}, except that all namespaces will be considered.
+	 * @param <Input> An input object to match against rules.
 	 */
 	public <Input> String getBestOutcome(Input input) throws NoMatchingRuleFoundException {
 		return getBestOutcome(null, input);
@@ -219,6 +223,7 @@ public class Engine {
 
 	/**
 	 * Evaluates all rules against the input and returns the result of the outcome associated with the rule having the highest priority.
+	 * @param <Input> An input object to match against rules.
 	 * @param nameSpacePattern optional.  if not null, then only rules with matching namespaces are evaluated.
 	 * @param input the Object containing all inputs to the expression language rule.
 	 * @return The outcome belonging to the best rule which is found.
@@ -235,7 +240,7 @@ public class Engine {
 	}
 	
 	/**
-	 * @see #executeBestAction(String, Object, Collection), except that all namespaces will be considered.
+	 * See {@link #executeBestAction(String, Object, Collection)}, except that all namespaces will be considered.
 	 */
 	public <Input, Output> Output executeBestAction(Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		return executeBestAction(null, input, actions);
@@ -259,7 +264,8 @@ public class Engine {
 	}
 	
 	/**
-	 * @see #executeAllActions(String, Object, Collection), except that all namespaces will be considered.
+	 * See {@link #executeAllActions(String, Object, Collection)}, except that all namespaces will be considered.
+	 * <b>NOTE THAT THIS METHOD DISREGARDS ANY RETURN VALUES OF ACTIONS!!</b>
 	 */
 	public <Input, Output> void executeAllActions(Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
 		executeAllActions(null, input, actions);
@@ -271,6 +277,8 @@ public class Engine {
 	 * Any outcome is only ever executed once!<br>
 	 * <br>
 	 * <b>NOTE THAT THIS METHOD DISREGARDS ANY RETURN VALUES OF ACTIONS!!</b>
+	 * @param <Input> The type of input to the actions.
+	 * @param <Output> The type of output from the actions.
 	 * @param nameSpacePattern optional.  if not null, then only rules with matching namespaces are evaluated.
 	 * @param input the Object containing all inputs to the expression language rule.
 	 * @param actions a collection of actions containing one action per possible outcome.  The actions whose names is equal to the positive outcomes will be executed.
@@ -322,13 +330,14 @@ public class Engine {
 	}
 	
 	/**
-	 * @see #getMatchingRules(String, Object), except that all namespaces will be considered.
+	 * See {@link #getMatchingRules(String, Object)}, except that all namespaces will be considered.
 	 */
 	public <Input> List<Rule> getMatchingRules(Input input) {
 		return getMatchingRules(null, input);
 	}
 		
 	/**
+	 * @param <Input> the type of input
 	 * @param nameSpacePattern optional.  if not null, then only rules with matching namespaces are evaluated.
 	 * @param input the Object containing all inputs to the expression language rule.
 	 * @return an ordered list of Rules which evaluated to "true", sorted by {@link Rule#getPriority()}, with the highest priority rules first in the list.
@@ -340,7 +349,7 @@ public class Engine {
 			pattern = Pattern.compile(nameSpacePattern);
 		}
 		
-		Map<String, Object> vars = new HashMap<String, Object>();
+		Map<String, Input> vars = new HashMap<String, Input>();
         vars.put("input", input);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();

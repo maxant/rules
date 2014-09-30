@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -17,38 +17,55 @@
  */
 package ch.maxant.rules;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import ch.maxant.rules.blackbox.EngineTest.MyInput;
 
 /**
  * This class supports Java 8 {@link Stream}s being used with the engine.
  * 
- * @see {@link Engine} for more details.  
+ * <code>
+		//to use a lambda, construct a SamAction and pass it a lambda.
+		IAction<MyInput, BigDecimal> action1 = new SamAction<MyInput, BigDecimal>("outcome1", i -> new BigDecimal("100.0"));
+		IAction<MyInput, BigDecimal> action2 = new SamAction<MyInput, BigDecimal>("outcome2", i -> new BigDecimal("101.0"));
+
+		List<IAction<MyInput, BigDecimal>> actions = Arrays.asList(action1, action2);
+		
+		Engine e = new Engine(rules, true);
+ * </code>
+ * 
+ * See <code>Engine</code> for more details.  
  */
 public class Java8Engine extends Engine {
 
-	/** @see Engine#Engine(java.util.Collection, boolean).  Convenience constructor for use with Java 8 {@link Stream}s.  
-	 * Simply collects all elements from the given {@link Stream}. */
+	/** See <code>#Engine(java.util.Collection, boolean)</code>.  Convenience constructor for use with Java 8 {@link Stream}s.  
+	 * Simply collects all elements from the given {@link Stream}. 
+	 */
 	public Java8Engine(final Stream<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 	    super(rules.collect(Collectors.toList()), throwExceptionIfCompilationFails);
 	}
 
-	/** @see #executeBestAction(Object, java.util.Collection), supports {@link Stream}s. */
+	/** See <code>#executeBestAction(Object, java.util.Collection)</code>, supports {@link Stream}s. */
     public <Input, Output> Output executeBestAction(Input input, Stream<IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
         return executeBestAction(null, input, actions);
     }
     
-    /** @see #executeBestAction(String nameSpacePattern, Object, java.util.Collection), supports {@link Stream}s. */
+    /** See <code>#executeBestAction(String nameSpacePattern, Object, java.util.Collection)</code>, supports {@link Stream}s. 
+     */
     public <Input, Output> Output executeBestAction(String nameSpacePattern, Input input, Stream<IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	return executeBestAction(nameSpacePattern, input, actions.collect(Collectors.toList()));
     }
     
-    /** @see #executeAllActions(Object, java.util.Collection), supports {@link Stream}s. */
+    /** See <code>#executeAllActions(Object, java.util.Collection)</code>, supports {@link Stream}s. */
     public <Input, Output> void executeAllActions(Input input, Stream<IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	executeAllActions(null, input, actions);
     }
     
-    /** @see #executeAllActions(String nameSpacePattern, Object, java.util.Collection), supports {@link Stream}s. */
+    /** See <code>#executeAllActions(String nameSpacePattern, Object, java.util.Collection)</code>, supports {@link Stream}s. */
     public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, Stream<IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	executeAllActions(nameSpacePattern, input, actions.collect(Collectors.toList()));
     }

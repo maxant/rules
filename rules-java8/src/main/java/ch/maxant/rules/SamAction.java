@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -29,7 +29,7 @@ public class SamAction<I, O> extends AbstractAction<I, O> {
 	/**
 	 * @param name the name of this action
 	 * @param action a lambda containing the function which should be 
-	 * 		executed when {@link #execute(Object)} is called by the {@link Engine}.
+	 * 		executed when <code>execute(Object)</code> is called by the <code>Engine</code>.
 	 */
 	public SamAction(String name, ExecutableAction<I, O> action) {
 		super(name);

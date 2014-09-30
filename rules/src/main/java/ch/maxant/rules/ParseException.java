@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -21,7 +21,7 @@ package ch.maxant.rules;
  * When replacing {@link SubRule} placeholders (the '#' character) in rules, this exception may
  * be thrown if no suitable subrule can be found.  
  * 
- * @see The "addRules" methods in {@link Engine}. 
+ * @see Engine#Engine(java.util.Collection, boolean)
  */
 public class ParseException extends Exception {
 

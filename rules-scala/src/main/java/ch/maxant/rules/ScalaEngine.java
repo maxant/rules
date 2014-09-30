@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Ant Kutschera
+ * Copyright (c) 2011-2014 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -20,31 +20,31 @@ package ch.maxant.rules;
 /**
  * This class supports Scala collections being used with the engine.
  * 
- * @see {@link Engine} for more details.  
+ * @see <code>Engine</code> for more details.  
  */
 public class ScalaEngine extends Engine {
 
-	/** @see Engine#Engine(java.util.Collection, boolean).  Supports Scala collections. */
+	/** See <code>#Engine(java.util.Collection, boolean).</code>  Supports Scala collections. */
 	public ScalaEngine(final scala.collection.Iterable<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 	    super(scala.collection.JavaConversions.asJavaCollection(rules), throwExceptionIfCompilationFails);
 	}
 
-	/** @see #executeAllActions(String, Object, java.util.Collection), supports Scala collections. */
+	/** See <code>#executeAllActions(String, Object, java.util.Collection)</code>, supports Scala collections. */
     public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
         executeAllActions(nameSpacePattern, input, scala.collection.JavaConversions.asJavaCollection(actions));
     }
     
-    /** @see #executeAllActions(Object, java.util.Collection), supports Scala collections. */
+    /** See <code>#executeAllActions(Object, java.util.Collection)</code>, supports Scala collections. */
     public <Input, Output> void executeAllActions(Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	executeAllActions(null, input, actions);
     }
     
-    /** @see #executeBestAction(Object, java.util.Collection), supports Scala collections. */
+    /** See <code>#executeBestAction(Object, java.util.Collection)</code>, supports Scala collections. */
     public <Input, Output> Output executeBestAction(Input input, scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	return executeBestAction(null, input, actions);
     }
     
-    /** @see #executeBestAction(String, Object, java.util.Collection), supports Scala collections. */
+    /** See <code>#executeBestAction(String, Object, java.util.Collection)</code>, supports Scala collections. */
     public <Input, Output> Output executeBestAction(final String namespace, final Input input, final scala.collection.Iterable<AbstractAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
     	return executeBestAction(namespace, input, scala.collection.JavaConversions.asJavaCollection(actions));
     }
