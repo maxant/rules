@@ -17,13 +17,8 @@
  */
 package ch.maxant.rules;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import ch.maxant.rules.blackbox.EngineTest.MyInput;
 
 /**
  * This class supports Java 8 {@link Stream}s being used with the engine.
