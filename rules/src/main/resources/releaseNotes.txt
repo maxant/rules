@@ -1,6 +1,6 @@
 2.1.0 - 201409280000
 ======================
-Converted to GIT and Maven.
+Converted to GIT and Maven and added support for Java 8.
 
 2.0.3 - 201308060830
 ======================
