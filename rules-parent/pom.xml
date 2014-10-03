@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.maxant</groupId>
 	<artifactId>rules-parent</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <url>http://blog.maxant.co.uk/pebble/2011/11/12/1321129560000.html</url>
 
@@ -118,7 +118,7 @@
         <developer>
             <id>ant</id>
             <name>Ant Kutschera</name>
-            <email>ant@maxant.co.uk</email>
+            <email>ant.kutschera@gmail.com</email>
         </developer>
 	</developers>
 
@@ -135,4 +135,13 @@
 		</snapshotRepository>
 	</distributionManagement>
 	
+	<name>rules</name>
+	<description>A simple rule engine for Java. See https://github.com/maxant/rules for details.</description>
+	<organization>
+		<name>Ant Kutschera</name>
+		<url>http://blog.maxant.co.uk/pebble/</url>
+	</organization>
+	<scm>
+		<url>https://github.com/maxant/rules.git</url>
+	</scm>
 </project>
