@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Rule</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: Rule</h1>
+
+    
+
+
+
+<section>
+
+<header>
+    <h2>
+    Rule
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="Rule"><span class="type-signature"></span>new Rule<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        An <a href="Engine.html">Engine</a> contains a list of rules.  The engine can then be asked to provide the outcome of the Action associated with the best matching rule (see <a href="Engine.html#executeBestAction">Engine#executeBestAction</a>), or to provide a list of matching rules (see <a href="Engine.html#getMatchingRules">Engine#getMatchingRules</a>).  Each rule is "evaluated"by using the #expression supplied in the constructor <a href="Rule.html">Rule</a>.The expression must be valid expression language.  During evaludation, the input object passed to the engine is mapped to the name "input", which can beused in the rules.  For example, consider the following rule:<br><br>&nbsp;&nbsp;&nbsp;<code>input.person1.name == "ant" &amp;&amp; input.person1.gender == "male"</code><br><br>Note how the rule evaluates to "true" or "false".  For any rule to be a candidateto have an associated IAction executed, it must evaluate to "true".  The rule in the example above requires an input object which conforms to the bean specification, and which is composed of an object named "person1", which has attributes"name"and "gender".  If an input object is supplied to the engine such that this ruleevaluates to true, then it is a candidate to have its action run, either by the engine, when <a href="Engine.html#executeBestAction">Engine#executeBestAction</a> is called, or by the application, when <a href="Engine.html#getMatchingRules">Engine#getMatchingRules</a>returns the rule and the application decides to run the action.<br><br>Rules belong to namespaces, so that a single engine can be used to evaluate rules from different components within an application.  within a namespace, all rules musthave unique names (this is checked when adding rules to an engine).  The reason is thatrules can be composed of <a href="SubRule.html">SubRule</a>s and when they are composed in that manner, rules refer to subrules by their names.<br><br>A rule has a priority too.  In certain cases, where the application only requires the best rule to be used, the priority helps the application decide which rule to run when there is more than one match.<br><br>The description in a rule is imply to aid in rule management.<br><br>Typically rules are customisable at runtime using some kind of administration UI.While this framework does not provide an out of the box framework, it has been designed such that the rules could be created from a persistent store.It is entirely conceivable that an application would load rules from a databaseand execute existing actions based on the rules.  Only when a new action is required, would an application need to be upgraded and redeployed.<br>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the rule.  Should be unique within the namespace (tested when adding rules to the <a href="Engine.html">Engine</a>).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>expression</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A Javascript rule. All variables must come from the object called "input".  The rule MUST evaluate to "true" if it is to be a candidate for execution.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>outcome</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Normally a string, this is the name of an action to run, if this rule is the winner or this is the result of calling the method <a href="Engine.html#getBestOutcome">Engine#getBestOutcome</a>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The priority of a rule is used when sorting the matching rules.  A higher number indicates a higher priority and that causes the rule to be placed nearer the start in the Array of matching rules.  If the best outcome is being determined, or the best action, then it is the outcome/action at index 0 of the matching rules which is used.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>namespace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The namespace of this rule, for example a version number or component name.  When the engine is used, the caller supplies an optional namespace pattern (regular expression) which is used  to filter the rules which are used in determining outcomes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An optional description of the rule, helpful for managing rules.</td>
+        </tr>
+
+    
+    </tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Ant</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="getFullyQualifiedName"><span class="type-signature"></span>getFullyQualifiedName<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line114">line 114</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the namespace concatenated with the name, separated by a '.'
+</div>
+
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="DuplicateNameException.html">DuplicateNameException</a></li><li><a href="Engine.html">Engine</a></li><li><a href="NoActionFoundException.html">NoActionFoundException</a></li><li><a href="NoMatchingRuleFoundException.html">NoMatchingRuleFoundException</a></li><li><a href="ParseException.html">ParseException</a></li><li><a href="Rule.html">Rule</a></li><li><a href="SubRule.html">SubRule</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sun Nov 16 2014 00:11:45 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

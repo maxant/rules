@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Engine</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: Engine</h1>
+
+    
+
+
+
+<section>
+
+<header>
+    <h2>
+    Engine
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="Engine"><span class="type-signature"></span>new Engine<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        A Rule Engine.  Can evaluate rules and execute actions or simply provide an ordered list of the best matching <a href="Rule.html">Rule</a>s.<br><br>A fuller explanation of how to use rules can be found in the documentation for <a href="Rule.html">Rule</a>s.<br><br>Imagine a tarif system which your business needed to be highly configurable.The business wants to be able to specify new tarifs or update existing onesat any time.  The criteria used to determine which tarifs are relevantto a customer wanting to make a purchase are based on the attributes belonging firstly to the person, and secondly to their account.  For example, a customerwho is under 26 is eligible for a youth tarif.  Seniors are eligible for their owntarif too.  Additionally, customers who do not get a youth or senior tarifare entitled to a loyalty tarif if they have had an account for more than 24 months.<br><br>These business rules can be modelled in a database as a set of strings.  The data can then be loaded and modelled in the code using the <a href="Rule.html">Rule</a> API. Consider the following four rules:<br><br><code>var r1 = new Rule("YouthTarif",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age &lt; 26", "YT2011", 3,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs");<br>var r2 = new Rule("SeniorTarif",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"input.age &gt; 59", "ST2011", 3,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs");<br>var r3 = new Rule("DefaultTarif",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"!#YouthTarif &amp;&amp; !#SeniorTarif", "DT2011", 3,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs");<br>var r4 = new Rule("LoyaltyTarif",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"#DefaultTarif &amp;&amp; input.account.ageInMonths &gt; 24",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"LT2011", 4,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ch.maxant.someapp.tarifs");<br></code><br>The following object model can then be created and used to evaluate the rules.<br><br><code>var request = {person: {name: "p", age: 35}, account: {ageInMonths: 25}};</code><br><br>The following code can then be used to determine the best tarif, or list of all matching tarifs:<br><br><code>//will return both DT2011 and LT2011, since both are relevant.<br>//Since LT2011 has a higher priority, it is first in the list.<br>var matches = engine.getMatchingRules(request);<br><br>// returns "LT2011", since the loyalty tarif has a higher priority<br>var tarif = engine.getBestOutcome(request); <br></code><br>See <a href="Rule.html">Rule</a> for more details.  See the tests for more examples!
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>rules</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The rules which define the system.</td>
+        </tr>
+
+    
+    </tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Ant</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line261">line 261</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        DuplicateNameException thrown if any rules have the same name within a namespace
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        ParseException Thrown if a subrule which is referenced in a rule cannot be resolved.
+    
+    </div>
+
+</li>
+        </ul>
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="executeAllActions"><span class="type-signature"></span>executeAllActions<span class="signature">(nameSpacePattern, input, actions)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Evaluates all rules against the input and then executes all action associated with the positive rules outcomes, in order of highest priority first.<br><br>Any outcome is only ever executed once!<br><br><b>NOTE THAT THIS METHOD DISREGARDS ANY RETURN VALUES OF ACTIONS!!</b>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nameSpacePattern</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional.  if not null, then only rules with matching namespaces are evaluated.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Object containing all inputs to the expression language rule.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>actions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an Array of Objects containing one per possible outcome.  These objects must have a property called `name`.         The objects whose names are equal to the positive outcomes will be executed.         by having the `execute` function of that object called.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line443">line 443</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        NoMatchingRuleFoundException If no matching rule was found.  Rules must evaluate to true in order to be candidates.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        NoActionFoundException If no action with a name matching the winning rules outcome was found.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        DuplicateNameException if any actions have the same name.
+    
+    </div>
+
+</li>
+        </ul>
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="executeBestAction"><span class="type-signature"></span>executeBestAction<span class="signature">(nameSpacePattern, input, actions)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Evaluates all rules against the input and returns the result of the action associated with the rule having the highest priority.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nameSpacePattern</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional.  if not null, then only rules with matching namespaces are evaluated.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Object containing all inputs to the Javascript rule.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>actions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an Array of Objects containing one per possible outcome.  These objects must have a property         called `name`. The object whose name is equal to the winning outcome will be executed by having the         <code>execute</code> function of that object called. When calling the function, it is passed the         input object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line421">line 421</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        NoMatchingRuleFoundException If no matching rule was found.  Rules must evaluate to true in order to be candidates.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        NoActionFoundException If no action with a name matching the winning rules outcome was found.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        DuplicateNameException if any actions have the same name.
+    
+    </div>
+
+</li>
+        </ul>
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The result of the action (object) with the same name as the winning rules outcome.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getBestOutcome"><span class="type-signature"></span>getBestOutcome<span class="signature">(nameSpacePattern, input)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Evaluates all rules against the input and returns the result of the outcome associated with the rule having the highest priority.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nameSpacePattern</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional.  if not null, then only rules with matching namespaces are evaluated.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Object containing all inputs to the expression language rule.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line398">line 398</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        NoMatchingRuleFoundException If no matching rule was found.  Rules must evaluate to true in order to be candidates.
+    
+    </div>
+
+
+        
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The outcome belonging to the best rule which is found.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getMatchingRules"><span class="type-signature"></span>getMatchingRules<span class="signature">(nameSpacePattern, input)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nameSpacePattern</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional.  if not null, then only rules with matching namespaces are evaluated.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Object containing all inputs to the expression language rule.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="rules.js.html">rules.js</a>, <a href="rules.js.html#line359">line 359</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    an Array of Rules which evaluated to "true", sorted by <code>Rule.priority</code>, with the highest priority rules first in the list.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="DuplicateNameException.html">DuplicateNameException</a></li><li><a href="Engine.html">Engine</a></li><li><a href="NoActionFoundException.html">NoActionFoundException</a></li><li><a href="NoMatchingRuleFoundException.html">NoMatchingRuleFoundException</a></li><li><a href="ParseException.html">ParseException</a></li><li><a href="Rule.html">Rule</a></li><li><a href="SubRule.html">SubRule</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sun Nov 16 2014 00:11:45 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

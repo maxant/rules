@@ -1,0 +1,37 @@
+{
+  "name": "maxant-rules",
+  "version": "2.1.3",
+  "description": "A really simple rule engine for Node.js",
+  "keywords": ["rule engine"],
+  "homepage": "https://github.com/maxant/rules",
+  "bugs": {
+    "url": "https://github.com/maxant/rules/issues"
+  },
+  "license": "LGPL-3.0",
+  "author": {
+    "name": "Ant Kutschera"
+  },
+  "main": "./lib/rules.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxant/rules.git"
+  },
+  "dependencies": {
+    "es6-collections": "^0.3.4",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-yuidoc": "^0.5.2",
+    "grunt-env": "^0.4.2",
+    "grunt-istanbul": "^0.3.0",
+    "grunt-jsdoc": "^0.6.1",
+    "grunt-mocha-test": "^0.12.2",
+    "mocha": "^2.0.1",
+    "unit.js": "^1.0.2"
+  }
+}
