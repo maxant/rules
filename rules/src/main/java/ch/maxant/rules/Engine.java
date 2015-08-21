@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Ant Kutschera
+ * Copyright (c) 2011-2015 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -98,10 +98,21 @@ import org.mvel2.MVEL;
  */
 public class Engine {
 
+	/** the name which scripts should use for the input, unless overriden in the constructor/builder. */
+	public static final String DEFAULT_INPUT_NAME = "input";
+
 	private static final Logger log = Logger.getLogger(Engine.class.getName());
 	
-	private final List<CompiledRule> rules = new ArrayList<CompiledRule>();
-	private final Set<String> uniqueOutcomes = new HashSet<String>();
+	private List<CompiledRule> rules;
+	protected final Set<String> uniqueOutcomes = new HashSet<String>();
+	protected List<Rule> parsedRules;
+
+	protected final boolean throwExceptionIfCompilationFails;
+	protected final String inputName;
+	
+	//reserved for subclasses and not used in this class - yuck, but hey.
+	protected final String[] javascriptFilesToLoad;
+	protected final Integer poolSize;
 
 	/**
 	 * @param rules The rules which define the system.
@@ -111,12 +122,29 @@ public class Engine {
 	 * @throws ParseException Thrown if a subrule which is referenced in a rule cannot be resolved.
 	 */
 	public Engine(final Collection<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
-		init(rules, throwExceptionIfCompilationFails);
+		this(rules, DEFAULT_INPUT_NAME, throwExceptionIfCompilationFails);
 	}
 
+	/**
+	 * See {@link #Engine(Collection, boolean)}
+	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
+	 */
+	public Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+		this(rules, inputName, throwExceptionIfCompilationFails, null, null);
+	}
+	
+	protected Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+		this.inputName = inputName;
+		this.throwExceptionIfCompilationFails = throwExceptionIfCompilationFails;
+		this.javascriptFilesToLoad = javascriptFilesToLoad;
+		this.poolSize = poolSize;
+		init(rules);
+	}
+	
 	/** handles the initialisation */
-	private void init(Collection<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+	protected void init(Collection<Rule> rules) throws DuplicateNameException, CompileException, ParseException {
 		log.info("\r\n\r\n*****Initialising rule engine...*****");
+		this.rules = new ArrayList<CompiledRule>();
 		long start = System.currentTimeMillis();
 		Map<String, Rule> names = new HashMap<String, Rule>();
 		for(Rule r : rules){
@@ -128,7 +156,7 @@ public class Engine {
 		    uniqueOutcomes.add(r.getOutcome());
 		}
 		
-		List<Rule> parsedRules = new ArrayList<Rule>();
+		parsedRules = new ArrayList<Rule>();
 		
 		//now replace all rule references with the actual rule, contained within brackets
 		while(true){
@@ -194,27 +222,34 @@ public class Engine {
 			}
 		}
 		
-		//precomile
-		
+		compile();
+
+		log.info("*****Engine initialisation completed in " + (System.currentTimeMillis()-start) + " ms*****\r\n");
+	}
+
+	protected void compile() throws CompileException {
 		for(Rule r : parsedRules){
 			if(r instanceof SubRule){
 				continue;
 			}
-			try{
-				this.rules.add(new CompiledRule(r));
-				log.info("added rule: " + r);
-			}catch(org.mvel2.CompileException ex){
-				log.warning("Failed to compile " + r.getFullyQualifiedName() + ": " + ex.getMessage());
-				if(throwExceptionIfCompilationFails){
-					throw new CompileException(ex.getMessage());
-				}
+			addCompiledRule(throwExceptionIfCompilationFails, r);
+		}
+	}
+
+	private void addCompiledRule(boolean throwExceptionIfCompilationFails, Rule r) throws CompileException {
+		try{
+			this.rules.add(new CompiledRule(r));
+			log.info("added rule: " + r);
+		}catch(org.mvel2.CompileException ex){
+			log.warning("Failed to compile " + r.getFullyQualifiedName() + ": " + ex.getMessage());
+			if(throwExceptionIfCompilationFails){
+				throw new CompileException(ex.getMessage());
 			}
 		}
-		log.info("*****Engine initialisation completed in " + (System.currentTimeMillis()-start) + " ms*****\r\n");
 	}
 
 	/**
-	 * See {@link #getBestOutcome(Object)}, except that all namespaces will be considered.
+	 * See {@link #getBestOutcome(String, Object)}, except that all namespaces will be considered.
 	 * @param <Input> An input object to match against rules.
 	 */
 	public <Input> String getBestOutcome(Input input) throws NoMatchingRuleFoundException {
@@ -350,7 +385,7 @@ public class Engine {
 		}
 		
 		Map<String, Input> vars = new HashMap<String, Input>();
-        vars.put("input", input);
+		vars.put(inputName, input);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();
 		for(CompiledRule r : rules){

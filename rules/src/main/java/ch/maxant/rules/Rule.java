@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Ant Kutschera
+ * Copyright (c) 2011-2015 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -97,7 +97,7 @@ public class Rule implements Comparable<Rule> {
     }
 
     /**
-     * See {@link #Rule(String, String, String, int, String)}, just without a description.
+     * See {@link #Rule(String, String, String, int, String, String)}, just without a description.
      */
     public Rule(final String name, final String expression, final String outcome, final int priority,
             final String namespace){

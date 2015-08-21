@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Ant Kutschera
+ * Copyright (c) 2011-2015 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -34,6 +34,7 @@ public abstract class AbstractAction<Input, Output> implements IAction<Input, Ou
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getName() {
 		return name;
 	}

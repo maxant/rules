@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Ant Kutschera
+ * Copyright (c) 2011-2015 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -23,12 +23,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.script.ScriptException;
 
 import org.junit.Test;
 
@@ -42,28 +45,33 @@ import ch.maxant.rules.ParseException;
 import ch.maxant.rules.Rule;
 import ch.maxant.rules.SubRule;
 
-public class EngineTest {
+public abstract class AbstractEngineTest {
 
-	
+	public abstract Engine getEngine(List<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException;
+
+	protected abstract boolean isJavascriptTest();
+
 	/**
 	 * similar to {@link #test1()}, but reversed rule priority.
 	 * @throws ParseException 
 	 * @throws CompileException 
+	 * @throws IOException 
+	 * @throws ScriptException 
 	 */
 	@Test
-	public void test2() throws DuplicateNameException, CompileException, ParseException {
+	public void test2() throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException {
 		Rule rule1 = new Rule("R1", "input.p1.name == \"ant\" && input.p2.name == \"clare\"", "outcome1", 0, "ch.maxant.produkte", "Spezi Regel für Familie Kutschera");
 		Rule rule2 = new Rule("R2", "true", "outcome2", 1, "ch.maxant.produkte", "Default Regel");
 		List<Rule> rules = Arrays.asList(rule1, rule2);
 
-		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("100.0");
 			}
 		};
 		
-		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome2") {
+		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome2") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("101.0");
@@ -71,7 +79,7 @@ public class EngineTest {
 		};
 		List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1, action2);
 		
-		Engine e = new Engine(rules, true);
+		Engine e = getEngine(rules, true);
 		
 		MyInput input = new MyInput();
 		Person p1 = new Person("ant");
@@ -93,13 +101,13 @@ public class EngineTest {
 		Rule rule2 = new Rule("R1", "true", "outcome2", 1, "ch.maxant.fahrplan", "two");
 		List<Rule> rules = Arrays.asList(rule1, rule2);
 		
-		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("100.0");
 			}
 		};
-		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome2") {
+		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome2") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("101.0");
@@ -108,7 +116,7 @@ public class EngineTest {
 		List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1, action2);
 		
 		try {
-			Engine e = new Engine(rules, true);
+			Engine e = getEngine(rules, true);
 			MyInput input = new MyInput();
 			
 			BigDecimal price = e.executeBestAction("ch\\.maxant\\.prod.*", input, actions);
@@ -119,18 +127,18 @@ public class EngineTest {
 	}
 	
 	@Test
-	public void testNamespaceMatchingFailed() throws DuplicateNameException, CompileException, ParseException{
+	public void testNamespaceMatchingFailed() throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException{
 		Rule rule1 = new Rule("R1", "true", "outcome1", 0, "ch.maxant.produkte", "one");
 		Rule rule2 = new Rule("R1", "true", "outcome2", 1, "ch.maxant.fahrplan", "two");
 		List<Rule> rules = Arrays.asList(rule1, rule2);
 		
-		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("100.0");
 			}
 		};
-		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome2") {
+		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome2") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("101.0");
@@ -138,7 +146,7 @@ public class EngineTest {
 		};
 		List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1, action2);
 
-		Engine e = new Engine(rules, true);
+		Engine e = getEngine(rules, true);
 		
 		MyInput input = new MyInput();
 		
@@ -165,7 +173,7 @@ public class EngineTest {
 		List<Rule> rules = Arrays.asList(rule1, rule2, rule3, rule4);
 
 		try{
-			Engine e = new Engine(rules, true);
+			Engine e = getEngine(rules, true);
 			
 			TravelRequest request = new TravelRequest(50);
 			request.put("travelClass", 2);
@@ -219,12 +227,12 @@ public class EngineTest {
 	}
 	
 	@Test
-	public void testSwallowELException(){
+	public void testSwallowELException() throws ScriptException, IOException{
 		Rule rule = new Rule("1", "input eq 345", "SomeCommand", 0, "ch.maxant.produkte");
 		List<Rule> rules = Arrays.asList(rule);
 
 		try{
-			Engine e = new Engine(rules, false); //false!! thats what we are testing!!
+			Engine e = getEngine(rules, false); //false!! thats what we are testing!!
 			
 			List<Rule> rs = e.getMatchingRules(null, 123);
 			
@@ -245,12 +253,27 @@ public class EngineTest {
 		List<Rule> rules = Arrays.asList(rule);
 
 		try{
-			new Engine(rules, true);
+			getEngine(rules, true);
 			
 			fail("no exception found");
 		}catch(Exception ex){
-			assertTrue(ex.getMessage().startsWith("[Error: unknown class or illegal statement: "));
+			if(isJavascriptTest()){
+				assertTrue(ex.getMessage().contains("<eval>:1:6 Expected ; but found someIllegalOperator"));
+				assertTrue(ex.getMessage().contains("input someIllegalOperator 345"));
+				assertTrue(ex.getMessage().contains("^ in <eval> at line number 1 at column number 6"));
+			}else{
+				assertTrue(ex.getMessage().startsWith("[Error: unknown class or illegal statement: "));
+			}
 		}
+	}
+
+	@Test
+	public void testOverrideInputName() throws Exception {
+		Rule rule= new Rule("1", "jane.age > 34", "veryOld", 1, "ch.maxant.produkte");
+		List<Rule> rules = Arrays.asList(rule);
+
+		assertEquals("veryOld", new Engine(rules, "jane", true).getBestOutcome(new Person(35)));
+		assertEquals(0, new Engine(rules, "jane", true).getMatchingRules(new Person(33)).size());
 	}
 	
 	@Test
@@ -260,7 +283,7 @@ public class EngineTest {
 		List<Rule> rules = Arrays.asList(rule1, rule2);
 
 		try{
-			Engine e = new Engine(rules, true);
+			Engine e = getEngine(rules, true);
 			
 			List<Rule> rs = e.getMatchingRules(null,  234);
 			
@@ -284,7 +307,7 @@ public class EngineTest {
 	    List<Rule> rules = Arrays.asList(sr1, sr2, rule);
 	    
 	    try{
-	        Engine e = new Engine(rules, true);
+	        Engine e = getEngine(rules, true);
 	        
 	        List<Rule> matches = e.getMatchingRules(null);
 	        assertEquals(1, matches.size());
@@ -306,7 +329,7 @@ public class EngineTest {
 	    Rule rule = new Rule("3", "#1 && !#2", "Bingo", 1, "ch.maxant.test");
 	    List<Rule> rules = Arrays.asList(sr1, sr2, rule);
 
-        AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("Bingo") {
+        AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("Bingo") {
             @Override
             public BigDecimal execute(MyInput input) {
                 return new BigDecimal("100.0");
@@ -316,7 +339,7 @@ public class EngineTest {
         List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1);
 
         try {
-            Engine e = new Engine(rules, true);
+            Engine e = getEngine(rules, true);
             
             MyInput input = new MyInput();
             
@@ -332,7 +355,7 @@ public class EngineTest {
 	}
 	
 	@Test
-	public void testJavadocExample(){
+	public void testJavadocExample() throws ScriptException, IOException{
 		
 		Rule r1 = new Rule("YouthTarif", "input.person.age < 26", "YT2011", 3, "ch.maxant.someapp.tarifs");
 		Rule r2 = new Rule("SeniorTarif", "input.person.age > 59", "ST2011", 3, "ch.maxant.someapp.tarifs");
@@ -341,7 +364,7 @@ public class EngineTest {
 		List<Rule> rules = Arrays.asList(r1, r2, r3, r4);
 
 		try {
-			Engine engine = new Engine(rules, true);
+			Engine engine = getEngine(rules, true);
 
 			TarifRequest request = new TarifRequest();
 			request.setPerson(new Person("p"));
@@ -399,13 +422,13 @@ public class EngineTest {
 		Rule rule1 = new Rule("1", "true", "SomeCommand", 3, "ch.maxant.produkte");
 		List<Rule> rules = Arrays.asList(rule1);
 
-		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("100.0");
 			}
 		};
-		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action2 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("101.0");
@@ -414,7 +437,7 @@ public class EngineTest {
 		List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1, action2);
 		
 		try{
-			Engine engine = new Engine(rules, true);
+			Engine engine = getEngine(rules, true);
 			engine.executeBestAction(new MyInput(), actions);
 			fail("why no expection for duplicate action name?");
 		}catch(DuplicateNameException ex){
@@ -429,7 +452,7 @@ public class EngineTest {
 		Rule rule1 = new Rule("1", "true", "SomeCommand", 3, "ch.maxant.produkte");
 		List<Rule> rules = Arrays.asList(rule1);
 		
-		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<EngineTest.MyInput, BigDecimal>("outcome1") {
+		AbstractAction<MyInput, BigDecimal> action1 = new AbstractAction<AbstractEngineTest.MyInput, BigDecimal>("outcome1") {
 			@Override
 			public BigDecimal execute(MyInput input) {
 				return new BigDecimal("100.0");
@@ -438,7 +461,7 @@ public class EngineTest {
 		List<AbstractAction<MyInput, BigDecimal>> actions = Arrays.asList(action1);
 		
 		try{
-			Engine engine = new Engine(rules, true);
+			Engine engine = getEngine(rules, true);
 			engine.executeBestAction(new MyInput(), actions);
 			fail("why no expection for duplicate action name?");
 		}catch(NoActionFoundException ex){
@@ -448,82 +471,6 @@ public class EngineTest {
 		}
 	}
 
-	@Test
-	public void testExecuteBestActionManyActionsFiring(){
-		Rule r1 = new Rule("SendEmailToUser", "input.config.sendUserEmail == true", "SendEmailToUser", 1, "ch.maxant.someapp.config");
-		Rule r2 = new Rule("SendEmailToModerator", "input.config.sendAdministratorEmail == true and input.user.numberOfPostings < 5", "SendEmailToModerator", 2, "ch.maxant.someapp.config");
-		List<Rule> rules = Arrays.asList(r1, r2);
-		
-		final List<String> log = new ArrayList<String>();
-		
-		AbstractAction<ForumSetup, Void> a1 = new AbstractAction<ForumSetup, Void>("SendEmailToUser") {
-			@Override
-			public Void execute(ForumSetup input) {
-				log.add("Sending email to user!");
-				return null;
-			}
-		};
-		AbstractAction<ForumSetup, Void> a2 = new AbstractAction<ForumSetup, Void>("SendEmailToModerator") {
-			@Override
-			public Void execute(ForumSetup input) {
-				log.add("Sending email to moderator!");
-				return null;
-			}
-		};
-
-		try {
-			Engine engine = new Engine(rules, true);
-
-			ForumSetup setup = new ForumSetup();
-			setup.getConfig().setSendUserEmail(true);
-			setup.getConfig().setSendAdministratorEmail(true);
-			setup.getUser().setNumberOfPostings(2);
-			
-			engine.executeAllActions(setup, Arrays.asList(a1, a2));
-			assertEquals(2, log.size());
-			assertEquals("Sending email to moderator!", log.get(0));
-			assertEquals("Sending email to user!", log.get(1));
-			
-		} catch (DuplicateNameException e) {
-			fail(e.getMessage());
-		} catch (CompileException e) {
-			fail(e.getMessage());
-		} catch (ParseException e) {
-			fail(e.getMessage());
-		} catch (NoMatchingRuleFoundException e) {
-			fail(e.getMessage());
-		} catch (NoActionFoundException e) {
-			fail(e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testRuleWithIteration() throws Exception {
- 		
-		String expression = 
-				"for(student : input.students){" +
-				"	if(student.age < 10) return true;" +
-				"}" +
-				"return false;";
-
-		Rule r1 = new Rule("containsStudentUnder10", expression , "leaveEarly", 1, "ch.maxant.rules", "If a class contains a student under 10 years of age, then the class may go home early");
-		
-		Rule r2 = new Rule("default", "true" , "leaveOnTime", 0, "ch.maxant.rules", "this is the default");
-		
-		Classroom classroom = new Classroom();
-		classroom.getStudents().add(new Person(12));
-		classroom.getStudents().add(new Person(10));
-		classroom.getStudents().add(new Person(8));
-
-		Engine e = new Engine(Arrays.asList(r1, r2), true);
-		
-		assertEquals("leaveEarly", e.getBestOutcome(classroom));
-		
-		classroom.getStudents().remove(classroom.getStudents().size()-1);
-
-		assertEquals("leaveOnTime", e.getBestOutcome(classroom));
-	}
-	
 	public static final class Person {
 		private String name;
 		private Integer age;

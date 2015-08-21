@@ -22,9 +22,9 @@ import java.math.BigDecimal
 import org.junit.Test
 import ch.maxant.rules._
 import scala.collection.immutable.List
-import ch.maxant.rules.blackbox.EngineTest.MyInput
-import ch.maxant.rules.blackbox.EngineTest.Person
-import ch.maxant.rules.blackbox.EngineTest.TravelRequest
+import ch.maxant.rules.blackbox.AbstractEngineTest.MyInput
+import ch.maxant.rules.blackbox.AbstractEngineTest.Person
+import ch.maxant.rules.blackbox.AbstractEngineTest.TravelRequest
 import java.util.Arrays
 
 class EngineTest2 {
@@ -43,7 +43,7 @@ class EngineTest2 {
             new BigDecimal("100.0")
         )
 
-        val action2 = new AbstractAction[EngineTest.MyInput, BigDecimal]("outcome2") {
+        val action2 = new AbstractAction[MyInput, BigDecimal]("outcome2") {
             def execute(input: MyInput) = {
                 new BigDecimal("101.0")
             }

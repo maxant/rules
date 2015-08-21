@@ -1,24 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.maxant</groupId>
 		<artifactId>rules-parent</artifactId>
-		<version>2.1.1-SNAPSHOT</version>
-        <relativePath>../rules-parent</relativePath>
+		<version>2.2.0</version>
+		<relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
 		<mvel2-version>2.2.1.Final</mvel2-version>
+		<jackson.version>1.9.12</jackson.version>
 	</properties>
 	<artifactId>rules</artifactId>
-    <packaging>jar</packaging>
+	<packaging>jar</packaging>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
 			<!-- added for expression language used by the rule engine -->
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
 			<version>${mvel2-version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+			<version>2.4.2</version>
 		</dependency>
 	</dependencies>
 
@@ -31,15 +37,14 @@
 				<executions>
 					<execution>
 						<goals>
-							<!-- build a jar with the tests in it, 
-							     so that rules-scala can depend on 
-								 test classes from this module. -->
+							<!-- build a jar with the tests in it, so that rules-scala can depend 
+								on test classes from this module. -->
 							<goal>test-jar</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
-	</build>	
-	
+	</build>
+
 </project>

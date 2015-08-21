@@ -23,8 +23,8 @@ import ch.maxant.rules.Engine
 import ch.maxant.rules.Rule
 import ch.maxant.rules.Action
 import java.math.BigDecimal
-import ch.maxant.rules.blackbox.EngineTest.MyInput
-import ch.maxant.rules.blackbox.EngineTest.Person
+import ch.maxant.rules.blackbox.AbstractEngineTest.MyInput
+import ch.maxant.rules.blackbox.AbstractEngineTest.Person
 import ch.maxant.rules.ScalaEngine
 
 class ScalaTests {

@@ -17,6 +17,7 @@
  */
 package ch.maxant.rules;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +45,13 @@ public class Java8Engine extends Engine {
 	    super(rules.collect(Collectors.toList()), throwExceptionIfCompilationFails);
 	}
 
+	/** See <code>#Engine(java.util.Collection, boolean)</code>.  Convenience constructor for use with Java 8 {@link Stream}s.  
+	 * Simply collects all elements from the given {@link Stream}. 
+	 */
+	public Java8Engine(final Collection<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+		super(rules, throwExceptionIfCompilationFails);
+	}
+	
 	/** See <code>#executeBestAction(Object, java.util.Collection)</code>, supports {@link Stream}s. */
     public <Input, Output> Output executeBestAction(Input input, Stream<IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
         return executeBestAction(null, input, actions);

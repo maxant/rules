@@ -35,8 +35,8 @@ import ch.maxant.rules.Java8Engine;
 import ch.maxant.rules.ParseException;
 import ch.maxant.rules.Rule;
 import ch.maxant.rules.SamAction;
-import ch.maxant.rules.blackbox.EngineTest.MyInput;
-import ch.maxant.rules.blackbox.EngineTest.Person;
+import ch.maxant.rules.blackbox.AbstractEngineTest.MyInput;
+import ch.maxant.rules.blackbox.AbstractEngineTest.Person;
 
 public class Java8EngineTest {
 
