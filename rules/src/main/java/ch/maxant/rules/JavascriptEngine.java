@@ -119,7 +119,7 @@ public class JavascriptEngine extends Engine {
 	 * The pool is not preloaded.
 	 * @param rules The rules which define the system. Please note that rules may access the input using 
 	 * 			bean notation (e.g. "<code>input.people[0].name</code>") OR 
-	 * 			Java notation (e.g. "<code>input.getPeople(0).getName()</code>").
+	 * 			Java notation (e.g. "<code>input.getPeople().get(0).getName()</code>").
 	 * @param throwExceptionIfCompilationFails if true, and a rule cannot be compiled, then a {@link CompileException} will be thrown.
 	 * @param javascriptFilesToLoad optional list of scripts to load - either script names found on classpath, or actual scripts.
 	 * @throws DuplicateNameException thrown if any rules have the same name within a namespace
@@ -134,7 +134,7 @@ public class JavascriptEngine extends Engine {
 	 * See {@link #JavascriptEngine(Collection, boolean, String...)
 	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
 	 * @param jsonifyInput if true, then the input can be accessed using bean notation, such as "input.passengers[0].name" rather 
-	 * than using Java notation such as "input.getPassengers(0).getName()".
+	 * than using Java notation such as "input.getPassengers().get(0).getName()".
 	 * @param poolSize the maximum size of the pool. You can override more of the pool configuration by overriding the method {@link #getPoolConfig()}.
 	 * @param preloadPool if true, then before the constructor returns, it fills the pool.
 	 */

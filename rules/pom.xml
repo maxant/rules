@@ -8,8 +8,7 @@
 		<relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
-		<mvel2-version>2.2.1.Final</mvel2-version>
-		<jackson.version>1.9.12</jackson.version>
+		<mvel2-version>2.2.6.Final</mvel2-version>
 	</properties>
 	<artifactId>rules</artifactId>
 	<packaging>jar</packaging>

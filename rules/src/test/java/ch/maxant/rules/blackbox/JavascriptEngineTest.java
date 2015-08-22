@@ -240,7 +240,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	}
 	
 	@Test
-	public void testMultithreading2_NoProblemsExpectedBecauseOfEnginePool() throws Exception {
+	public void testMultithreadingStatefulRules_NoProblemsExpectedBecauseOfEnginePool() throws Exception {
 
 		String expression = "rule420() === 40000.0"; //will only evaluate to true if there is no concurrency, because the function is stateful!
 
