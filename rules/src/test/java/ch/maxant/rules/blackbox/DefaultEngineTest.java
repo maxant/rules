@@ -195,5 +195,27 @@ public class DefaultEngineTest extends AbstractEngineTest {
 		System.out.println("Took on average " + ((System.nanoTime()-start)/1000000.0/numTasks) + "ms per task");
 	}
 	
+	/** tests that regular expressions work in MVEL based rules. rule only matches when input.name is purely characters. 
+	 * since input is only characters, the rule is found. */
+	@Test
+	public void testRuleWithRegExpOK() throws Exception{
+		Rule rule1 = new Rule("1", "input.name ~= '[a-zA-Z]*'", "RegExpWasMatched", 1, "ch.maxant.demo");
+		List<Rule> rules = Arrays.asList(rule1);
+		
+		Engine engine = getEngine(rules, true);
+		String outcome = engine.getBestOutcome(new Person("John"));
+		assertEquals("RegExpWasMatched", outcome);
+	}
+	
+	/** tests that regular expressions work in MVEL based rules. rule only matches when input.name is purely characters. 
+	 * <b>since input contains numbers, we expect no rule to match!</b> */
+	@Test(expected=NoMatchingRuleFoundException.class)
+	public void testRuleWithRegExpNOK() throws Exception{
+		Rule rule1 = new Rule("1", "input.name ~= '[a-zA-Z]*'", "RegExpWasMatched", 1, "ch.maxant.demo");
+		List<Rule> rules = Arrays.asList(rule1);
+		
+		Engine engine = getEngine(rules, true);
+		engine.getBestOutcome(new Person("F4G5"));
+	}
 	
 }

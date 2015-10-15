@@ -350,4 +350,27 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 		assertTrue(engine.getPoolSize()[1] == 2);
 	}
 
+	/** tests that regular expressions work in MVEL based rules. rule only matches when input.name is purely characters. 
+	 * since input is only characters, the rule is found. */
+	@Test
+	public void testRuleWithRegExpOK() throws Exception{
+		Rule rule1 = new Rule("1", "input.name.search(/^[a-zA-Z]*$/) >= 0", "RegExpWasMatched", 1, "ch.maxant.demo");
+		List<Rule> rules = Arrays.asList(rule1);
+		
+		Engine engine = getEngine(rules, true);
+		String outcome = engine.getBestOutcome(new Person("John"));
+		assertEquals("RegExpWasMatched", outcome);
+	}
+	
+	/** tests that regular expressions work in MVEL based rules. rule only matches when input.name is purely characters. 
+	 * <b>since input contains numbers, we expect no rule to match!</b> */
+	@Test(expected=NoMatchingRuleFoundException.class)
+	public void testRuleWithRegExpNOK() throws Exception{
+		Rule rule1 = new Rule("1", "input.name.search(/^[a-zA-Z]*$/) >= 0", "RegExpWasMatched", 1, "ch.maxant.demo");
+		List<Rule> rules = Arrays.asList(rule1);
+		
+		Engine engine = getEngine(rules, true);
+		engine.getBestOutcome(new Person("F4G5"));
+	}
+	
 }
