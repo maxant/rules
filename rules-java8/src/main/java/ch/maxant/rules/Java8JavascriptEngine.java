@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Ant Kutschera
+ * Copyright (c) 2011-2017 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
