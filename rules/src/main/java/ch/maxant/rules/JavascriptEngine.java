@@ -17,33 +17,22 @@
  */
 package ch.maxant.rules;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import javax.script.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * A Javascript based Subclass of {@link Engine}. <br>
@@ -61,15 +50,17 @@ public class JavascriptEngine extends Engine {
 	static {
 		ScriptEngine engine = ENGINE_MANAGER.getEngineByMimeType(MIME_TYPE);
 		ScriptEngineFactory factory = engine.getFactory();
-		log.info("Using JavaScript engine " + factory.getEngineName() + "/"
-			+ factory.getEngineVersion() + "/"
-			+ factory.getLanguageName() + "/"
-			+ factory.getLanguageVersion() + "/"
-			+ factory.getExtensions() + "/"
-			+ factory.getMimeTypes() + "/"
-			+ factory.getNames() + "/"
-			+ "threading model: " + factory.getParameter("THREADING")
-		);
+		if(log.isLoggable(Level.INFO)){
+            log.info("Using JavaScript engine " + factory.getEngineName() + "/"
+                + factory.getEngineVersion() + "/"
+                + factory.getLanguageName() + "/"
+                + factory.getLanguageVersion() + "/"
+                + factory.getExtensions() + "/"
+                + factory.getMimeTypes() + "/"
+                + factory.getNames() + "/"
+                + "threading model: " + factory.getParameter("THREADING")
+            );
+        }
 	}
 
 	private final class PoolableEngineFactory extends BasePooledObjectFactory<Engine> {
@@ -291,9 +282,9 @@ public class JavascriptEngine extends Engine {
 				String msg = r.getFullyQualifiedName() + "-{" + r.getExpression() + "}";
 				if(String.valueOf(result).equals("true")){
 					matchingRules.add(r);
-					log.info("matched: " + msg);
+					if(log.isLoggable(Level.INFO)) log.info("matched: " + msg);
 				}else{
-					log.info("unmatched: " + msg);
+                    if(log.isLoggable(Level.INFO)) log.info("unmatched: " + msg);
 				}
 			}
 			//order by priority!

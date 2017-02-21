@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>ch.maxant</groupId>
 		<artifactId>rules-parent</artifactId>
-		<version>2.2.1-SNAPSHOT</version>
+		<version>2.2.1</version>
 		<relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
-		<mvel2-version>2.2.6.Final</mvel2-version>
+		<mvel2-version>2.3.1.Final</mvel2-version>
 	</properties>
 	<artifactId>rules</artifactId>
 	<packaging>jar</packaging>
@@ -32,7 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.0.2</version>
 				<executions>
 					<execution>
 						<goals>

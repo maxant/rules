@@ -19,3 +19,5 @@ target/
 rules-js/test/coverage
 **/node_modules/
 
+*.iml
+.idea

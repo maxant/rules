@@ -17,19 +17,13 @@
  */
 package ch.maxant.rules;
 
+import org.mvel2.MVEL;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import org.mvel2.MVEL;
 
 /**
  * A Rule Engine.  Can evaluate rules and execute {@link IAction}s or simply provide an 
@@ -400,9 +394,9 @@ public class Engine {
 			String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
 			if(String.valueOf(o).equals("true")){
 				matchingRules.add(r.getRule());
-				log.info("matched: " + msg);
+                if(log.isLoggable(Level.INFO)) log.info("matched: " + msg);
 			}else{
-				log.info("unmatched: " + msg);
+                if(log.isLoggable(Level.INFO)) log.info("unmatched: " + msg);
 			}
 		}
 		
