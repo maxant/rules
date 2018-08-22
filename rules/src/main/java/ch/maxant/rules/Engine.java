@@ -103,7 +103,8 @@ public class Engine {
 
 	protected final boolean throwExceptionIfCompilationFails;
 	protected final String inputName;
-	
+	protected final Map<String,Object> varBindings;
+    
 	//reserved for subclasses and not used in this class - yuck, but hey.
 	protected final String[] javascriptFilesToLoad;
 	protected final Integer poolSize;
@@ -126,15 +127,29 @@ public class Engine {
 	public Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 		this(rules, inputName, throwExceptionIfCompilationFails, null, null);
 	}
-	
+
+	/**
+	 * See {@link #Engine(Collection, boolean)}
+	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
+	 * @param varBindings binding of any additional variables (in addition to the input) to be referenced in scripts.
+	 */
+    public Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+		this(rules, inputName, varBindings, throwExceptionIfCompilationFails, null, null);
+	}
+    
 	protected Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+		this(rules, inputName, new HashMap<String,Object>(), throwExceptionIfCompilationFails, null, null);
+	}
+
+    protected Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
 		this.inputName = inputName;
+		this.varBindings = varBindings;
 		this.throwExceptionIfCompilationFails = throwExceptionIfCompilationFails;
 		this.javascriptFilesToLoad = javascriptFilesToLoad;
 		this.poolSize = poolSize;
 		init(rules);
 	}
-	
+    
 	/** handles the initialisation */
 	protected void init(Collection<Rule> rules) throws DuplicateNameException, CompileException, ParseException {
 		log.info("\r\n\r\n*****Initialising rule engine...*****");
@@ -378,8 +393,9 @@ public class Engine {
 			pattern = Pattern.compile(nameSpacePattern);
 		}
 		
-		Map<String, Input> vars = new HashMap<String, Input>();
+		Map<String, Object> vars = new HashMap<>(varBindings);
 		vars.put(inputName, input);
+		System.out.println("*** MVEL variable bindings: " + vars);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();
 		for(CompiledRule r : rules){
