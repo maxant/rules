@@ -395,7 +395,6 @@ public class Engine {
 		
 		Map<String, Object> vars = new HashMap<>(varBindings);
 		vars.put(inputName, input);
-		System.out.println("*** MVEL variable bindings: " + vars);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();
 		for(CompiledRule r : rules){
