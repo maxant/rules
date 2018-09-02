@@ -8,7 +8,7 @@
 		<relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
-		<mvel2-version>2.3.1.Final</mvel2-version>
+		<mvel2-version>2.4.0.Final</mvel2-version>
 	</properties>
 	<artifactId>rules</artifactId>
 	<packaging>jar</packaging>
@@ -23,7 +23,7 @@
 		<dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
-			<version>2.4.2</version>
+			<version>2.6.0</version>
 		</dependency>
 	</dependencies>
 
@@ -32,7 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<goals>

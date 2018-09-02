@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Ant Kutschera
+ * Copyright (c) 2011-2018 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -195,7 +195,7 @@ public class Engine {
 					}
 					newExpression += "(" + toAdd.getExpression() + ")";
 					if(idx2 < r.getExpression().length()){
-						newExpression += r.getExpression().substring(idx2, r.getExpression().length());
+						newExpression += r.getExpression().substring(idx2);
 					}
 					if(r instanceof SubRule){
 					    parsedRules.add(new SubRule(r.getName(), newExpression, r.getNamespace(), r.getDescription()));
@@ -311,11 +311,10 @@ public class Engine {
 	 * @param nameSpacePattern optional.  if not null, then only rules with matching namespaces are evaluated.
 	 * @param input the Object containing all inputs to the expression language rule.
 	 * @param actions a collection of actions containing one action per possible outcome.  The actions whose names is equal to the positive outcomes will be executed.
-	 * @throws NoMatchingRuleFoundException If no matching rule was found.  Rules must evaluate to true in order to be candidates.
 	 * @throws NoActionFoundException If no action with a name matching the winning rules outcome was found.
 	 * @throws DuplicateNameException if any actions have the same name.
 	 */
-	public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, Collection<? extends IAction<Input, Output>> actions) throws NoMatchingRuleFoundException, NoActionFoundException, DuplicateNameException {
+	public <Input, Output> void executeAllActions(String nameSpacePattern, Input input, Collection<? extends IAction<Input, Output>> actions) throws NoActionFoundException, DuplicateNameException {
 		
 		Map<String, IAction<Input, Output>> actionsMap = validateActions(actions);
 		

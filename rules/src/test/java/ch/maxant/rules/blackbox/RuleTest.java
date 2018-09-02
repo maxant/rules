@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Ant Kutschera
+ * Copyright (c) 2011-2018 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -17,17 +17,13 @@
  */
 package ch.maxant.rules.blackbox;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import ch.maxant.rules.Rule;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import ch.maxant.rules.Rule;
+import static org.junit.Assert.*;
 
 public class RuleTest {
 
