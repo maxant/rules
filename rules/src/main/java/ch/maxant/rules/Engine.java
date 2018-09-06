@@ -133,7 +133,7 @@ public class Engine {
 	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
 	 * @param varBindings binding of any additional variables (in addition to the input) to be referenced in scripts.
 	 */
-    public Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+	public Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 		this(rules, inputName, varBindings, throwExceptionIfCompilationFails, null, null);
 	}
     
@@ -141,7 +141,7 @@ public class Engine {
 		this(rules, inputName, new HashMap<String,Object>(), throwExceptionIfCompilationFails, null, null);
 	}
 
-    protected Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+	protected Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
 		this.inputName = inputName;
 		this.varBindings = varBindings;
 		this.throwExceptionIfCompilationFails = throwExceptionIfCompilationFails;

@@ -48,6 +48,8 @@ import ch.maxant.rules.SubRule;
 public abstract class AbstractEngineTest {
 
 	public abstract Engine getEngine(List<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException;
+        
+	public abstract Engine getEngine(List<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException;
 
 	protected abstract boolean isJavascriptTest();
 

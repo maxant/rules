@@ -124,13 +124,35 @@ public class JavascriptEngine extends Engine {
 	/**
 	 * See {@link #JavascriptEngine(Collection, boolean, String...)
 	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
+	 * @param varBindings binding of any additional variables (in addition to the input) to be referenced in scripts.
+	 */
+	public JavascriptEngine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, String... javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+		this(rules, inputName, varBindings, throwExceptionIfCompilationFails, null, false, javascriptFilesToLoad);
+	}
+        
+	/**
+	 * See {@link #JavascriptEngine(Collection, boolean, String...)
+	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
 	 * @param jsonifyInput if true, then the input can be accessed using bean notation, such as "input.passengers[0].name" rather 
 	 * than using Java notation such as "input.getPassengers().get(0).getName()".
 	 * @param poolSize the maximum size of the pool. You can override more of the pool configuration by overriding the method {@link #getPoolConfig()}.
 	 * @param preloadPool if true, then before the constructor returns, it fills the pool.
 	 */
 	public JavascriptEngine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, boolean preloadPool, String... javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
-		super(rules, inputName, throwExceptionIfCompilationFails, poolSize, javascriptFilesToLoad);
+		this(rules, inputName, new HashMap<String,Object>(), throwExceptionIfCompilationFails, poolSize, preloadPool, javascriptFilesToLoad);
+	}
+
+	/**
+	 * See {@link #JavascriptEngine(Collection, boolean, String...)
+	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
+         * @param varBindings binding of any additional variables (in addition to the input) to be referenced in scripts.
+	 * @param jsonifyInput if true, then the input can be accessed using bean notation, such as "input.passengers[0].name" rather 
+	 * than using Java notation such as "input.getPassengers().get(0).getName()".
+	 * @param poolSize the maximum size of the pool. You can override more of the pool configuration by overriding the method {@link #getPoolConfig()}.
+	 * @param preloadPool if true, then before the constructor returns, it fills the pool.
+	 */
+	public JavascriptEngine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, Integer poolSize, boolean preloadPool, String... javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+		super(rules, inputName, varBindings, throwExceptionIfCompilationFails, poolSize, javascriptFilesToLoad);
 		
 		if(preloadPool){
 			
@@ -147,7 +169,7 @@ public class JavascriptEngine extends Engine {
 			}
 		}
 	}
-	
+
 	/**
 	 * Subclasses may override this. But the default will create a config which sets up the 
 	 * pool using the size passed into the constructor, otherwise accessible as 
@@ -278,6 +300,7 @@ public class JavascriptEngine extends Engine {
 			
 				//execute
 				engine.engine.getContext().setAttribute(inputName, input, ScriptContext.ENGINE_SCOPE);
+				engine.engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).putAll(this.varBindings);
 				Object result = e.getValue().eval();
 				String msg = r.getFullyQualifiedName() + "-{" + r.getExpression() + "}";
 				if(String.valueOf(result).equals("true")){

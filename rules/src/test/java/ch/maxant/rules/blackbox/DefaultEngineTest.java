@@ -23,7 +23,10 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +50,11 @@ public class DefaultEngineTest extends AbstractEngineTest {
 	@Override
 	public Engine getEngine(List<Rule> rules, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 		return new Engine(rules, throwExceptionIfCompilationFails);
+	}
+        
+	@Override
+	public Engine getEngine(List<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
+		return new Engine(rules, inputName, varBindings, throwExceptionIfCompilationFails);
 	}
 
 	@Override
@@ -216,6 +224,19 @@ public class DefaultEngineTest extends AbstractEngineTest {
 		
 		Engine engine = getEngine(rules, true);
 		engine.getBestOutcome(new Person("F4G5"));
+	}
+        
+	/* tests passing of extra initial variable bindings to the engine on construction */
+	@Test
+	public void testExtraVariableBindings() throws Exception {
+		Rule rule1 = new Rule("1", "input.age >= drinkingAge", "BobCanDrink", 1, "ch.maxant.demo");
+		List<Rule> rules = Arrays.asList(rule1);
+		
+		Map<String,Object> extraVarBindings = new HashMap<>();
+                extraVarBindings.put("drinkingAge", 18);
+		Engine engine = getEngine(rules, "input", extraVarBindings, true);
+		assertEquals("BobCanDrink", engine.getBestOutcome(new Person("Bob", 20)));
+                assertEquals(0, engine.getMatchingRules(new Person("Bob", 17)).size());
 	}
 	
 }
