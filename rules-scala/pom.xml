@@ -8,7 +8,7 @@
         <relativePath>../rules-parent</relativePath>
 	</parent>
 	<properties>
-		<scala-library-version>2.11.2</scala-library-version>
+		<scala-library-version>2.11.12</scala-library-version>
 		<maven-scala-plugin-version>2.15.2</maven-scala-plugin-version>
 	</properties>
 	<artifactId>rules-scala</artifactId>

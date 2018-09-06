@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Ant Kutschera
+ * Copyright (c) 2011-2018 Ant Kutschera
  * 
  * This file is part of Ant Kutschera's blog.
  * 
@@ -17,9 +17,10 @@
  */
 package ch.maxant.rules.blackbox;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import ch.maxant.rules.*;
+import org.junit.Test;
 
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,18 +33,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.script.ScriptException;
-
-import org.junit.Test;
-
-import ch.maxant.rules.AbstractAction;
-import ch.maxant.rules.CompileException;
-import ch.maxant.rules.DuplicateNameException;
-import ch.maxant.rules.Engine;
-import ch.maxant.rules.NoActionFoundException;
-import ch.maxant.rules.NoMatchingRuleFoundException;
-import ch.maxant.rules.ParseException;
-import ch.maxant.rules.Rule;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class DefaultEngineTest extends AbstractEngineTest {
 
