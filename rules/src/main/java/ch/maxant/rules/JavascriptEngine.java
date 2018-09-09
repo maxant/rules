@@ -124,13 +124,31 @@ public class JavascriptEngine extends Engine {
 	/**
 	 * See {@link #JavascriptEngine(Collection, boolean, String...)
 	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
-	 * @param jsonifyInput if true, then the input can be accessed using bean notation, such as "input.passengers[0].name" rather 
-	 * than using Java notation such as "input.getPassengers().get(0).getName()".
 	 * @param poolSize the maximum size of the pool. You can override more of the pool configuration by overriding the method {@link #getPoolConfig()}.
 	 * @param preloadPool if true, then before the constructor returns, it fills the pool.
 	 */
 	public JavascriptEngine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, boolean preloadPool, String... javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
-		super(rules, inputName, throwExceptionIfCompilationFails, poolSize, javascriptFilesToLoad);
+	    this(rules, inputName, throwExceptionIfCompilationFails, poolSize, preloadPool, new HashMap<String, Object>(), javascriptFilesToLoad);
+    }
+
+	/**
+	 * See {@link #JavascriptEngine(Collection, boolean, String...)
+     * <br><br>
+     * Allows you to define constants or static methods which rules can refer to.
+     * <code>
+     * Map<String, Object> statics = new HashMap<String, Object>();
+     * statics.put("someString", "this is a constant");
+     * Rule rule1 = new Rule("1", "input.name == someString", "ok", 1, "ch.maxant.demo");
+     * </code>
+     *
+	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
+	 * @param poolSize the maximum size of the pool. You can override more of the pool configuration by overriding the method {@link #getPoolConfig()}.
+	 * @param preloadPool if true, then before the constructor returns, it fills the pool.
+     * @param statics a map containing variable bindings which do not change, e.g. constants or static methods (functions).
+     *
+	 */
+	public JavascriptEngine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, boolean preloadPool, Map<String, Object> statics, String... javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+		super(rules, inputName, throwExceptionIfCompilationFails, poolSize, javascriptFilesToLoad, statics);
 		
 		if(preloadPool){
 			
@@ -278,6 +296,7 @@ public class JavascriptEngine extends Engine {
 			
 				//execute
 				engine.engine.getContext().setAttribute(inputName, input, ScriptContext.ENGINE_SCOPE);
+				engine.engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).putAll(this.statics);
 				Object result = e.getValue().eval();
 				String msg = r.getFullyQualifiedName() + "-{" + r.getExpression() + "}";
 				if(String.valueOf(result).equals("true")){

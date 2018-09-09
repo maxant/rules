@@ -19,17 +19,17 @@ package ch.maxant.rules.blackbox;
 
 import ch.maxant.rules.*;
 import org.junit.Test;
+import org.mvel2.MVEL;
 
 import javax.script.ScriptException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.System.currentTimeMillis;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -138,9 +138,9 @@ public class DefaultEngineTest extends AbstractEngineTest {
 		
 		Rule r2 = new Rule("default", "true" , "leaveOnTime", 0, "ch.maxant.rules", "this is the default");
 		
-		long start = System.currentTimeMillis();
+		long start = currentTimeMillis();
 		final Engine engine = new Engine(Arrays.asList(r1, r2), true);
-		System.out.println("Created engine including compiling scripts in " + (System.currentTimeMillis()-start) + "ms");
+		System.out.println("Created engine including compiling scripts in " + (currentTimeMillis()-start) + "ms");
 
 		ExecutorService pool = Executors.newFixedThreadPool(20);
 
@@ -204,9 +204,64 @@ public class DefaultEngineTest extends AbstractEngineTest {
 	public void testRuleWithRegExpNOK() throws Exception{
 		Rule rule1 = new Rule("1", "input.name ~= '[a-zA-Z]*'", "RegExpWasMatched", 1, "ch.maxant.demo");
 		List<Rule> rules = Arrays.asList(rule1);
-		
+
 		Engine engine = getEngine(rules, true);
 		engine.getBestOutcome(new Person("F4G5"));
 	}
-	
+
+	public static String getSomeString() {
+	    return "THIS_NEVER_CHANGES";
+    }
+
+	@Test
+    public void testStatics() throws Exception {
+	    Map<String, Object> statics = new HashMap<String, Object>();
+	    statics.put("someString", MVEL.getStaticMethod(this.getClass(), "getSomeString", new Class[0])); // import a static method
+
+		Rule rule1 = new Rule("1", "input.name == someString()", "ok", 1, "ch.maxant.demo");
+        Engine e = new Engine(singletonList(rule1), true, statics);
+
+        List<Rule> matchingRules = e.getMatchingRules(new Person("THIS_NEVER_CHANGES"));
+
+        assertEquals(1, matchingRules.size());
+        assertEquals(rule1, matchingRules.get(0));
+    }
+
+    @Test
+    public void testIllegalWords() throws Exception {
+        // NOT allowed to use "new " keyword
+        Rule rule1 = new Rule("1", "input.name == new Person('John', 18).name", "ok", 1, "ch.maxant.demo");
+        try {
+            new Engine(singletonList(rule1), true);
+            fail("no exception");
+        }catch (IllegalArgumentException e) {
+            assertEquals("Rule has an illegal word! None of the following words may be contained in rules: [Runtime, java, new , getBean, System, InitialContext]. Alternatively override Engine#initIllegalWords or Engine#verifyLegal.", e.getMessage());
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalWords_overrideAddMore() throws Exception {
+        // NOT allowed to use "new " keyword
+        Rule rule1 = new Rule("1", "input.name == 'John'", "ok", 1, "ch.maxant.demo");
+        new Engine(singletonList(rule1), true){
+            @Override
+            protected Set<String> initIllegalWords() {
+                Set<String> illegalWords = super.initIllegalWords();
+                illegalWords.add("John");
+                return illegalWords;
+            }
+        };
+    }
+
+    @Test
+    public void testIllegalWords_overrideNothingIllegal() throws Exception {
+        // NOT allowed to use "java" keyword => note that if you did need to use MAX_VALUE, you can because java lets you refer to the Integer class without the package
+        Rule rule1 = new Rule("1", "input.age == java.lang.Integer.MAX_VALUE", "ok", 1, "ch.maxant.demo");
+        new Engine(singletonList(rule1), true){
+            @Override
+            protected Set<String> initIllegalWords() {
+                return new HashSet<String>(); //nothings illegal here since we trust our rule authors entirely
+            }
+        };
+    }
 }

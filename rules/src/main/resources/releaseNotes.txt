@@ -1,6 +1,10 @@
+2.3.1 - 201809092200
+======================
+Removed constructors and methods which took Java 8 streams because it's not a good idea to pass streams around. Added constructors for using additional variables and static methods. See https://github.com/maxant/rules/pull/9.
+
 2.2.2 - 201809022100
 ======================
-Updated dependency versions and copyright notices
+Updated dependency versions and copyright notices.
 
 2.2.1 - 201702212200
 ======================

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.maxant</groupId>
 	<artifactId>rules-parent</artifactId>
-	<version>2.2.2-SNAPSHOT</version>
+	<version>2.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <url>http://blog.maxant.co.uk/pebble/2011/11/12/1321129560000.html</url>
 
@@ -106,7 +106,7 @@
 				<version>1.6.8</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>sonatype</serverId>
+					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
@@ -124,17 +124,15 @@
 	</developers>
 
 	<distributionManagement>
-		<repository>
-			<id>sonatype</id>
-			<name>OSS Sonatype Staging</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-		<snapshotRepository>
-			<id>sonatype</id>
-			<name>OSS Sonatype Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 	
 	<name>rules</name>
 	<description>A simple rule engine for Java. See https://github.com/maxant/rules for details.</description>
