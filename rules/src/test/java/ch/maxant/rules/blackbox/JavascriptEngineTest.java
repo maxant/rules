@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class JavascriptEngineTest extends AbstractEngineTest {
@@ -62,7 +63,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	public void testExecuteBestActionManyActionsFiring() throws ScriptException, IOException{
 		Rule r1 = new Rule("SendEmailToUser", "input.config.sendUserEmail == true", "SendEmailToUser", 1, "ch.maxant.someapp.config");
 		Rule r2 = new Rule("SendEmailToModerator", "input.config.sendAdministratorEmail == true && input.user.numberOfPostings < 5", "SendEmailToModerator", 2, "ch.maxant.someapp.config");
-		List<Rule> rules = Arrays.asList(r1, r2);
+		List<Rule> rules = asList(r1, r2);
 		
 		final List<String> log = new ArrayList<String>();
 		
@@ -89,7 +90,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 			setup.getConfig().setSendAdministratorEmail(true);
 			setup.getUser().setNumberOfPostings(2);
 			
-			engine.executeAllActions(setup, Arrays.asList(a1, a2));
+			engine.executeAllActions(setup, asList(a1, a2));
 			assertEquals(2, log.size());
 			assertEquals("Sending email to moderator!", log.get(0));
 			assertEquals("Sending email to user!", log.get(1));
@@ -124,7 +125,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 		classroom.getStudents().add(new Person(10));
 		classroom.getStudents().add(new Person(8));
 
-		Engine e = new JavascriptEngine(Arrays.asList(r1, r2), true, "lodash-3.10.0.js");
+		Engine e = new JavascriptEngine(asList(r1, r2), true, "lodash-3.10.0.js");
 		
 		assertEquals("leaveEarly", e.getBestOutcome(classroom));
 		
@@ -146,7 +147,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 		people.add(new Person("John"));
 		people.add(new Person("Ant"));
 
-		Engine e = new JavascriptEngine(Arrays.asList(r1, r2), true, "maxant.js", "lodash-3.10.0.js");
+		Engine e = new JavascriptEngine(asList(r1, r2), true, "maxant.js", "lodash-3.10.0.js");
 		
 		assertEquals("higherPremium", e.getBestOutcome(people));
 		
@@ -168,7 +169,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 		Rule r2 = new Rule("default", "true" , "leaveOnTime", 0, "ch.maxant.rules", "this is the default");
 		
 		long start = System.currentTimeMillis();
-		final Engine engine = new JavascriptEngine(Arrays.asList(r1, r2), true, "lodash-3.10.0.js");
+		final Engine engine = new JavascriptEngine(asList(r1, r2), true, "lodash-3.10.0.js");
 		System.out.println("Created engine including compiling scripts in " + (System.currentTimeMillis()-start) + "ms");
 
 		ExecutorService pool = Executors.newFixedThreadPool(20);
@@ -238,7 +239,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 		
 		Rule r2 = new Rule("default", "true" , "notThreadSafe", 0, "ch.maxant.rules");
 		
-		final Engine engine = new JavascriptEngine(Arrays.asList(r1, r2), true, "bad-stateful-rule.js");
+		final Engine engine = new JavascriptEngine(asList(r1, r2), true, "bad-stateful-rule.js");
 		final AtomicInteger successCount = new AtomicInteger();
 		final AtomicInteger unsuccessCount = new AtomicInteger();
 		ExecutorService pool = Executors.newFixedThreadPool(50);
@@ -291,19 +292,19 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 
 	@Test
 	public void testScriptCanUseBeanOrJavaNotation() throws Exception {
-		Collection<Rule> rules = Arrays.asList(new Rule("name", "input.getName() === 'John'", "ok", 1, "ch.maxant.test"));
+		Collection<Rule> rules = asList(new Rule("name", "input.getName() === 'John'", "ok", 1, "ch.maxant.test"));
 		JavascriptEngine engine = new JavascriptEngine(rules, "input", true, 10, false);
 		String bestOutcome = engine.getBestOutcome(new Person("John"));
 		assertEquals("ok", bestOutcome);
 
-		rules = Arrays.asList(new Rule("name", "input.name === 'John'", "ok", 1, "ch.maxant.test"));
+		rules = asList(new Rule("name", "input.name === 'John'", "ok", 1, "ch.maxant.test"));
 		engine = new JavascriptEngine(rules, "input", true, 10, false);
 		bestOutcome = engine.getBestOutcome(new Person("John"));
 	}
-	
+
 	@Test
 	public void testLoadScriptRatherThanFile() throws Exception {
-		Collection<Rule> rules = Arrays.asList(new Rule("name", "f() === 1", "ok", 1, "ch.maxant.test"));
+		Collection<Rule> rules = asList(new Rule("name", "f() === 1", "ok", 1, "ch.maxant.test"));
 		JavascriptEngine engine = new JavascriptEngine(rules, "input", true, 10, false, "function f(){return 1;}");
 		String bestOutcome = engine.getBestOutcome(1);
 		assertEquals("ok", bestOutcome);
@@ -311,7 +312,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	
 	@Test
 	public void testLoadBadScriptRatherThanFile() throws Exception {
-		Collection<Rule> rules = Arrays.asList(new Rule("name", "f() === 1", "ok", 1, "ch.maxant.test"));
+		Collection<Rule> rules = asList(new Rule("name", "f() === 1", "ok", 1, "ch.maxant.test"));
 		try{
 			new JavascriptEngine(rules, "input", true, 10, false, "function f(){%someInvalidToken}");
 			fail("no exception");
@@ -323,7 +324,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	@Test
 	public void testPreloadPoolAndPoolSize() throws Exception {
 		
-		Collection<Rule> rules = Arrays.asList(new Rule("name", "true", "ok", 1, "ch.maxant.test"));
+		Collection<Rule> rules = asList(new Rule("name", "true", "ok", 1, "ch.maxant.test"));
 		JavascriptEngine engine = new JavascriptEngine(rules, "input", true, 10, true);
 		
 		assertEquals(0, engine.getPoolSize()[0]);
@@ -332,7 +333,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 
 	@Test
 	public void testBuilder() throws Exception {
-		Collection<Rule> rules = Arrays.asList(new Rule("name", "input.getName() === 'John'", "ok", 1, "ch.maxant.test"));
+		Collection<Rule> rules = asList(new Rule("name", "input.getName() === 'John'", "ok", 1, "ch.maxant.test"));
 		JavascriptEngine engine = new JavascriptEngine.Builder(rules).withPoolSize(2).withPreloadPool(true).build();
 		String bestOutcome = engine.getBestOutcome(new Person("John"));
 		assertEquals("ok", bestOutcome);
@@ -345,7 +346,7 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	@Test
 	public void testRuleWithRegExpOK() throws Exception{
 		Rule rule1 = new Rule("1", "input.name.search(/^[a-zA-Z]*$/) >= 0", "RegExpWasMatched", 1, "ch.maxant.demo");
-		List<Rule> rules = Arrays.asList(rule1);
+		List<Rule> rules = asList(rule1);
 		
 		Engine engine = getEngine(rules, true);
 		String outcome = engine.getBestOutcome(new Person("John"));
@@ -357,22 +358,27 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	@Test(expected=NoMatchingRuleFoundException.class)
 	public void testRuleWithRegExpNOK() throws Exception{
 		Rule rule1 = new Rule("1", "input.name.search(/^[a-zA-Z]*$/) >= 0", "RegExpWasMatched", 1, "ch.maxant.demo");
-		List<Rule> rules = Arrays.asList(rule1);
+		List<Rule> rules = asList(rule1);
 		
 		Engine engine = getEngine(rules, true);
 		engine.getBestOutcome(new Person("F4G5"));
 	}
-	
-	/* tests passing of extra initial variable bindings to the engine on construction */
-	@Test
-	public void testExtraVariableBindings() throws Exception {
-		Rule rule1 = new Rule("1", "input.age >= drinkingAge", "BobCanDrink", 1, "ch.maxant.demo");
-		List<Rule> rules = Arrays.asList(rule1);
-		
-		Map<String,Object> extraVarBindings = new HashMap<>();
-                extraVarBindings.put("drinkingAge", 18);
-		Engine engine = getEngine(rules, "input", extraVarBindings, true);
-		assertEquals("BobCanDrink", engine.getBestOutcome(new Person("Bob", 20)));
-                assertEquals(0, engine.getMatchingRules(new Person("Bob", 17)).size());
-	}        
+
+    @Test
+    public void testStatics() throws Exception {
+        Collection<Rule> rules = asList(new Rule("name", "input.getAge() >= drinkingAge", "ok", 1, "ch.maxant.test"));
+        Map<String, Object> statics = new HashMap<String, Object>();
+        statics.put("drinkingAge", 18);
+        JavascriptEngine engine = new JavascriptEngine(rules, "input", true, 10, false, statics);
+        String bestOutcome = engine.getBestOutcome(new Person("John", 20));
+        assertEquals("ok", bestOutcome);
+
+        try{
+            bestOutcome = engine.getBestOutcome(new Person("Jane", 17));
+            fail("no exception");
+        }catch(NoMatchingRuleFoundException e){
+            //correct, because jane is less than 18
+        }
+    }
+
 }

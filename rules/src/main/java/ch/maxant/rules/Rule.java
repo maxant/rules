@@ -60,7 +60,7 @@ package ch.maxant.rules;
  * and execute existing actions based on the rules.  Only when a new action is 
  * required, would an application need to be upgraded and redeployed.<br>
  * <br>
- * For more info on rules, see <a href='http://mvel.codehaus.org/Language+Guide+for+2.0'>http://mvel.codehaus.org/Language+Guide+for+2.0</a>.
+ * For more info on rules, see <a href='http://mvel.documentnode.com/'>http://mvel.documentnode.com/</a>.
  * 
  * @see SubRule
 *  */

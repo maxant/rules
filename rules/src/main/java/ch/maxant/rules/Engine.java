@@ -88,16 +88,29 @@ import java.util.regex.Pattern;
  * </code>
  * <br>
  * See {@link Rule} for more details.  See <code>EngineTest</code> for more examples.  
- * See <a href='http://mvel.codehaus.org'>http://mvel.codehaus.org</a> for full details of the expression language.
+ * See <a href='https://github.com/mvel/mvel'>https://github.com/mvel/mvel</a> and
+ * See <a href='http://mvel.documentnode.com/'>http://mvel.documentnode.com/</a> for full details of the expression language.
  */
 public class Engine {
+
+    //https://github.com/mvel/mvel/issues/123
+    public static final String DEFAULT_ILLEGAL_WORDS = "java," + //e.g. access to java.io.xyz
+            "System," + //e.g. access to System.exit(1);
+            "Runtime," + //e.g. access to Runtime.getRuntime.exec("rm -rf")
+            "InitialContext," + // e.g. for accessing the CDI Bean Manager or TX Manager or some EJB (Service)
+            "new ," + //e.g. to instantiate classes - space afterwards so that its less critical
+            "getBean" //e.g. using spring context in order to call a service
+        ;
 
 	/** the name which scripts should use for the input, unless overriden in the constructor/builder. */
 	public static final String DEFAULT_INPUT_NAME = "input";
 
 	private static final Logger log = Logger.getLogger(Engine.class.getName());
-	
-	private List<CompiledRule> rules;
+
+    /** static variable bindings to be used in addition to the input when executing rules */
+    protected final Map<String, Object> statics;
+
+    private List<CompiledRule> rules;
 	protected final Set<String> uniqueOutcomes = new HashSet<String>();
 	protected List<Rule> parsedRules;
 
@@ -125,38 +138,55 @@ public class Engine {
 	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
 	 */
 	public Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
-		this(rules, inputName, throwExceptionIfCompilationFails, null, null);
+		this(rules, inputName, throwExceptionIfCompilationFails, null, null, new HashMap<String, Object>());
 	}
 
-	/**
+
+    /**
+	 * See {@link #Engine(Collection, String, boolean, Map)}
+     */
+	public Engine(final Collection<Rule> rules, boolean throwExceptionIfCompilationFails, Map<String, Object> statics) throws DuplicateNameException, CompileException, ParseException {
+	    this(rules, DEFAULT_INPUT_NAME, throwExceptionIfCompilationFails, null, null, statics);
+    }
+
+    /**
 	 * See {@link #Engine(Collection, boolean)}
-	 * @param inputName the name of the input in scripts, normally "input", but you can specify your own name here.
-	 * @param varBindings binding of any additional variables (in addition to the input) to be referenced in scripts.
-	 */
-	public Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
-		this(rules, inputName, varBindings, throwExceptionIfCompilationFails, null, null);
-	}
-    
-	protected Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
-		this(rules, inputName, new HashMap<String,Object>(), throwExceptionIfCompilationFails, null, null);
-	}
+     * <br><br>
+     * Allows you to define constants or static methods which rules can refer to.
+     * <code>
+     * Map<String, Object> statics = new HashMap<String, Object>();
+     * statics.put("someString", MVEL.getStaticMethod(this.getClass(), "getSomeString", new Class[0]));
+     * Rule rule1 = new Rule("1", "input.name == someString()", "ok", 1, "ch.maxant.demo");
+     * </code>
+     *
+     * @param statics a map containing variable bindings which do not change, e.g. constants or static methods (functions).
+     */
+	public Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Map<String, Object > statics) throws DuplicateNameException, CompileException, ParseException {
+	    this(rules, inputName, throwExceptionIfCompilationFails, null, null, statics);
+    }
 
-	protected Engine(final Collection<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad) throws DuplicateNameException, CompileException, ParseException {
+	protected Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad, Map<String, Object > statics) throws DuplicateNameException, CompileException, ParseException {
 		this.inputName = inputName;
 		this.varBindings = varBindings;
 		this.throwExceptionIfCompilationFails = throwExceptionIfCompilationFails;
 		this.javascriptFilesToLoad = javascriptFilesToLoad;
 		this.poolSize = poolSize;
+		this.statics = statics;
 		init(rules);
 	}
     
 	/** handles the initialisation */
 	protected void init(Collection<Rule> rules) throws DuplicateNameException, CompileException, ParseException {
 		log.info("\r\n\r\n*****Initialising rule engine...*****");
+
+        Set<String> illegalWordSet = initIllegalWords();
+
 		this.rules = new ArrayList<CompiledRule>();
 		long start = System.currentTimeMillis();
 		Map<String, Rule> names = new HashMap<String, Rule>();
 		for(Rule r : rules){
+            verifyLegal(r, illegalWordSet);
+
 			String fullyQualifiedName = r.getFullyQualifiedName();
 			if(names.containsKey(fullyQualifiedName)){
 				throw new DuplicateNameException("The name " + fullyQualifiedName + " was found in a different rule.");
@@ -236,7 +266,28 @@ public class Engine {
 		log.info("*****Engine initialisation completed in " + (System.currentTimeMillis()-start) + " ms*****\r\n");
 	}
 
-	protected void compile() throws CompileException {
+	/** override this if you want to change the illegal words that are checked. only rules without these words may be used. */
+	protected Set<String> initIllegalWords() {
+        Set<String> illegalWords = new HashSet<String>();
+        StringTokenizer st = new StringTokenizer(DEFAULT_ILLEGAL_WORDS, ",");
+        while (st.hasMoreTokens()) {
+            illegalWords.add(st.nextToken());
+        }
+        return illegalWords;
+    }
+
+    /** override this if you want to change how rules are verified against illegal words, e.g. to make the check case insensitive. */
+    protected void verifyLegal(Rule r, Set<String> illegalWords) {
+        for (String illegalWord : illegalWords) {
+            if (r.getExpression().contains(illegalWord)) {
+                throw new IllegalArgumentException(
+                        "Rule has an illegal word! None of the following words may be contained in rules: " + illegalWords + ". Alternatively override Engine#initIllegalWords or Engine#verifyLegal.");
+            }
+        }
+    }
+
+
+    protected void compile() throws CompileException {
 		for(Rule r : parsedRules){
 			if(r instanceof SubRule){
 				continue;
@@ -392,7 +443,8 @@ public class Engine {
 			pattern = Pattern.compile(nameSpacePattern);
 		}
 		
-		Map<String, Object> vars = new HashMap<>(varBindings);
+		Map<String, Object> vars = new HashMap<String, Object>(statics); // initialise with static stuff
+
 		vars.put(inputName, input);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();

@@ -2,8 +2,11 @@
 
 Simple Rule Engine from Ant's blog. Able to process MVEL and Javascript rules in JVM, or run on Node.js.
 
+Version 2.3.1:
+- Removed constructors and methods which took Java 8 streams because it's not a good idea to pass streams around. Added constructors for using additional variables and static methods. See https://github.com/maxant/rules/pull/9.
+
 Version 2.2.2:
-- Updated dependency versions and copyright notices
+- Updated dependency versions and copyright notices.
 
 Version 2.2.1:
 - Fixed https://github.com/maxant/rules/issues/4 - added checks to log level in order to improve performance.
@@ -53,7 +56,7 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
     # see http://central.sonatype.org/pages/ossrh-guide.html
     # need to ensure that servers section of maven settings.xml contains the following:
     #    <server>
-    #      <id>sonatype</id>
+    #      <id>ossrh</id>
     #      <username>YOUR_USERNAME</username>
     #      <password>YOUR_PASSWORD</password>
     #    </server>
