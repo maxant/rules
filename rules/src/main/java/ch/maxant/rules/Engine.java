@@ -116,7 +116,8 @@ public class Engine {
 
 	protected final boolean throwExceptionIfCompilationFails;
 	protected final String inputName;
-	
+	protected final Map<String,Object> varBindings;
+    
 	//reserved for subclasses and not used in this class - yuck, but hey.
 	protected final String[] javascriptFilesToLoad;
 	protected final Integer poolSize;
@@ -139,6 +140,7 @@ public class Engine {
 	public Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails) throws DuplicateNameException, CompileException, ParseException {
 		this(rules, inputName, throwExceptionIfCompilationFails, null, null, new HashMap<String, Object>());
 	}
+
 
     /**
 	 * See {@link #Engine(Collection, String, boolean, Map)}
@@ -165,13 +167,14 @@ public class Engine {
 
 	protected Engine(final Collection<Rule> rules, String inputName, boolean throwExceptionIfCompilationFails, Integer poolSize, String[] javascriptFilesToLoad, Map<String, Object > statics) throws DuplicateNameException, CompileException, ParseException {
 		this.inputName = inputName;
+		this.varBindings = varBindings;
 		this.throwExceptionIfCompilationFails = throwExceptionIfCompilationFails;
 		this.javascriptFilesToLoad = javascriptFilesToLoad;
 		this.poolSize = poolSize;
 		this.statics = statics;
 		init(rules);
 	}
-	
+    
 	/** handles the initialisation */
 	protected void init(Collection<Rule> rules) throws DuplicateNameException, CompileException, ParseException {
 		log.info("\r\n\r\n*****Initialising rule engine...*****");
@@ -441,6 +444,7 @@ public class Engine {
 		}
 		
 		Map<String, Object> vars = new HashMap<String, Object>(statics); // initialise with static stuff
+
 		vars.put(inputName, input);
 
 		List<Rule> matchingRules = new ArrayList<Rule>();

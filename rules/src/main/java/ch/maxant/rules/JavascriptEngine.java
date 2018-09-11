@@ -165,7 +165,7 @@ public class JavascriptEngine extends Engine {
 			}
 		}
 	}
-	
+
 	/**
 	 * Subclasses may override this. But the default will create a config which sets up the 
 	 * pool using the size passed into the constructor, otherwise accessible as 

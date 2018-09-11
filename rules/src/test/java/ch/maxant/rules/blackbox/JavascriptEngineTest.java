@@ -40,6 +40,12 @@ public class JavascriptEngineTest extends AbstractEngineTest {
 	}
 	
 	@Override
+	public Engine getEngine(List<Rule> rules, String inputName, Map<String,Object> varBindings, boolean throwExceptionIfCompilationFails)
+                	throws DuplicateNameException, CompileException, ParseException, ScriptException, IOException {
+		return new JavascriptEngine(rules, inputName, varBindings, throwExceptionIfCompilationFails);
+	}
+	        
+	@Override
 	protected boolean isJavascriptTest() {
 		return true;
 	}
