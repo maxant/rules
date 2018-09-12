@@ -89,7 +89,7 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
     # note that the ID is the same as the one contained in the distributionManagement section of the parent pom
 
     # after deployment, check the maven logs. you'll find something like this:
-    #    Uploading to sonatype: https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/rules-java8/2.2.2-SNAPSHOT/maven-metadata.xml
+    #    Uploading to sonatype: https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/rules-java8/2.3.1-SNAPSHOT/maven-metadata.xml
 
     # Go to https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/ and double check it's all there
 
@@ -142,3 +142,4 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
 
     # go here and enter details, with title = v2.3.1
     https://github.com/maxant/rules/releases/new
+    
