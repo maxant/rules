@@ -26,32 +26,58 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
 
 ## Building
 
-    #update versions in poms, to snapshot version, e.g. "2.3.1-SNAPSHOT" => keep SNAPSHOT, nexus will do the release automatically if "autoReleaseAfterClose" is set to true in the parent pom.
+    # update versions in poms, to snapshot version, e.g. "2.3.1-SNAPSHOT"
 
-    #update dependency versions in poms
+    # update dependency versions in poms
 
-    #update copyright years in all files
+    # update copyright years in all files
 
     cd rules-parent
 
-    #ensure all is working
+    # ensure all is working
     mvn clean package
 
-    #make changes
+    # make changes
 
-    #ensure all is working
+    # ensure all is working
     mvn clean package
 
-    #update release notes in "releaseNotes.txt" as well as in "README.md".
+    # update release notes in "releaseNotes.txt" as well as in "README.md".
 
-    #build
+    # build
     mvn clean deploy
 
-    # that might require you to create a gpg key
+    # when pop up requests password for gpg key, use the correct password!
+
+    # the above might require you to create a gpg key.
+    # see https://central.sonatype.org/pages/working-with-pgp-signatures.html
     #   gpg --gen-key
-    #   gpg --list-secret-keys
-    #   gpg --keyserver pgp.mit.edu --send-keys ABCDEF
-    # the above takes the letters which follow the "sec" key
+    #   gpg --list-keys
+    #
+    # now upload it:
+    #   gpg --keyserver keyserver.gpg.com  --send-keys ABCDEF
+    #   gpg --keyserver pool.sks-keyservers.net --send-keys ABCDEF
+    #   gpg --keyserver keys.gnupg.net --send-keys ABCDEF
+    #   gpg --keyserver keyserver.ubuntu.com --send-keys ABCDEF
+    #
+    # or maybe with hkp protocol?
+    #
+    #   gpg --keyserver hkp://keyserver.gpg.com  --send-keys ABCDEF
+    #   gpg --keyserver hkp://pool.sks-keyservers.net --send-keys ABCDEF
+    #   gpg --keyserver hkp://keys.gnupg.net --send-keys ABCDEF
+    #   gpg --keyserver hkp://keyserver.ubuntu.com --send-keys ABCDEF
+    #
+    # then go have a coffee. check
+    # http://keyserver.ubuntu.com/pks/lookup?search=ant%40maxant.co.uk&hash=on&op=vindex
+    # to see if the key is available.
+    #
+    # if it isn't try this:
+    #
+    #   gpg --armor --export ant@maxant.co.uk
+    #
+    # and import that manually at http://keyserver.ubuntu.com
+    #
+    # the above takes the letters (ID) which follow the "pub" key
     # it is OK to create a brand new gpg key e.g. if your laptop explodes.
     # see http://central.sonatype.org/pages/ossrh-guide.html
     # need to ensure that servers section of maven settings.xml contains the following:
@@ -61,7 +87,53 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
     #      <password>YOUR_PASSWORD</password>
     #    </server>
     # note that the ID is the same as the one contained in the distributionManagement section of the parent pom
+
     # after deployment, check the maven logs. you'll find something like this:
     #    Uploading to sonatype: https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/rules-java8/2.2.2-SNAPSHOT/maven-metadata.xml
+
     # Go to https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/ and double check it's all there
-    # Finally go have a coffee and after a while, your release will be ready here: https://oss.sonatype.org/#nexus-search;quick~maxant
+
+    # Now if that all works, do the release:
+    # update versions in poms, to release version, e.g. "2.3.1"
+
+    # build
+    mvn clean deploy
+
+    # then you should either get a failed report, or logging like this:
+
+      [INFO]  * Upload of locally staged artifacts finished.
+      [INFO]  * Closing staging repository with ID "chmaxant-1012".
+
+      Waiting for operation to complete...
+      ........
+
+      [INFO] Remote staged 1 repositories, finished with success.
+      [INFO] Remote staging repositories are being released...
+
+      Waiting for operation to complete...
+      .........
+
+      [INFO] Remote staging repositories released.
+      [INFO] ------------------------------------------------------------------------
+      [INFO] Reactor Summary:
+      [INFO]
+      [INFO] rules .............................................. SUCCESS [ 12.109 s]
+      [INFO] rules .............................................. SUCCESS [ 24.242 s]
+      [INFO] rules-java8 ........................................ SUCCESS [  4.704 s]
+      [INFO] rules-scala ........................................ SUCCESS [01:55 min]
+      [INFO] ------------------------------------------------------------------------
+      [INFO] BUILD SUCCESS
+      [INFO] ------------------------------------------------------------------------
+
+    # Your release will be ready here: https://oss.sonatype.org/#nexus-search;quick~maxant
+
+    # Finally go have a coffee and after a while, your release will also be ready in maven central:
+    #   https://mvnrepository.com/artifact/ch.maxant/rules
+
+    # don't forget to create a release in GitHub:
+
+    git commit -a -m'...'
+
+    git tag -a v2.3.1
+
+    git push origin v2.3.1
