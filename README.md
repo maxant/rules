@@ -134,6 +134,8 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
 
     git commit -a -m'...'
 
-    git tag -a v2.3.1
+    git push origin master
+
+    git tag -a v2.3.1 -m'...'
 
     git push origin v2.3.1
