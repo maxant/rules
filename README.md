@@ -2,6 +2,9 @@
 
 Simple Rule Engine from Ant's blog. Able to process MVEL and Javascript rules in JVM, or run on Node.js.
 
+Version 2.4.1:
+- Updated license to Apache 2.0
+
 Version 2.3.1:
 - Removed constructors and methods which took Java 8 streams because it's not a good idea to pass streams around. Added constructors for using additional variables and static methods. See https://github.com/maxant/rules/pull/9.
 
@@ -22,15 +25,38 @@ Version 2.1.0:
 
 Also see the test classes, e.g. [https://github.com/maxant/rules/tree/master/rules/src/test/java/ch/maxant/rules/blackbox](https://github.com/maxant/rules/tree/master/rules/src/test/java/ch/maxant/rules/blackbox), [https://github.com/maxant/rules/tree/master/rules-java8/src/test/java/ch/maxant/rules/blackbox](https://github.com/maxant/rules/tree/master/rules-java8/src/test/java/ch/maxant/rules/blackbox) and [https://github.com/maxant/rules/tree/master/rules-scala/src/test/scala/ch/maxant/rules/blackbox](https://github.com/maxant/rules/tree/master/rules-scala/src/test/scala/ch/maxant/rules/blackbox), or [https://github.com/maxant/rules/tree/master/rules-js/test/rules-test.js](https://github.com/maxant/rules/tree/master/rules-js/test/rules-test.js).
 
-Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/rules/tree/master/rules/src/main/resources](https://github.com/maxant/rules/tree/master/rules/src/main/resources).
+Release Notes can be found here: [https://github.com/maxant/rules/tree/master/rules/src/main/resources](https://github.com/maxant/rules/tree/master/rules/src/main/resources).
+
+## License
+
+See LICENCE file.
+
+    Copyright 2011-2019 Ant Kutschera
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 ## Building
 
-    # update versions in poms, to snapshot version, e.g. "2.3.1-SNAPSHOT"
+    # update versions in poms, to snapshot version, e.g. "2.4.1-SNAPSHOT"
 
     # update dependency versions in poms
 
-    # update copyright years in all files
+    # update copyright years in:
+    #  - rules/src/main/resources/license.txt
+    #  - rules-java8/src/main/resources/license.txt
+    #  - rules-parent/license.txt
+    #  - rules-scala/src/main/resources/license.txt
+    #  - LICENSE
 
     cd rules-parent
 
@@ -94,7 +120,7 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
     # Go to https://oss.sonatype.org/content/repositories/snapshots/ch/maxant/ and double check it's all there
 
     # Now if that all works, do the release:
-    # update versions in poms, to release version, e.g. "2.3.1"
+    # update versions in poms, to release version, e.g. "2.4.1"
 
     # build
     mvn clean deploy
@@ -142,4 +168,3 @@ Release Notes and Licence (LGPL) can be found here: [https://github.com/maxant/r
 
     # go here and enter details, with title = v2.3.1
     https://github.com/maxant/rules/releases/new
-    

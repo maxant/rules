@@ -1,3 +1,7 @@
+2.4.1 - 201903212100
+======================
+Changed license to Apache 2.0
+
 2.3.1 - 201809092200
 ======================
 Removed constructors and methods which took Java 8 streams because it's not a good idea to pass streams around. Added constructors for using additional variables and static methods. See https://github.com/maxant/rules/pull/9.
