@@ -29,7 +29,7 @@ Release Notes can be found here: [https://github.com/maxant/rules/tree/master/ru
 
 ## License
 
-See LICENCE file.
+See LICENSE file.
 
     Copyright 2011-2019 Ant Kutschera
 
@@ -162,9 +162,9 @@ See LICENCE file.
 
     git push origin master
 
-    git tag -a v2.3.1 -m'...'
+    git tag -a v2.4.1 -m'...'
 
-    git push origin v2.3.1
+    git push origin v2.4.1
 
-    # go here and enter details, with title = v2.3.1
+    # go here and enter details, with title = v2.4.1
     https://github.com/maxant/rules/releases/new
