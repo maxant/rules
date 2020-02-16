@@ -436,12 +436,18 @@ public class Engine {
 			}
 			
 			Object o = MVEL.executeExpression(r.getCompiled(), vars);
-			String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
 			if(String.valueOf(o).equals("true")){
 				matchingRules.add(r.getRule());
-                if(log.isLoggable(Level.INFO)) log.info("matched: " + msg);
+				if(log.isLoggable(Level.FINE)) {
+					String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
+					log.fine("matched: " + msg);
+				}
+				
 			}else{
-                if(log.isLoggable(Level.INFO)) log.info("unmatched: " + msg);
+                if(log.isLoggable(Level.FINE)) {
+					String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
+					log.fine("unmatched: " + msg);
+				}
 			}
 		}
 		
