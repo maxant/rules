@@ -93,7 +93,7 @@ public class Engine {
     /** static variable bindings to be used in addition to the input when executing rules */
     protected final Map<String, Object> statics;
 
-    private List<CompiledRule> rules;
+    protected List<CompiledRule> rules;
 	protected final Set<String> uniqueOutcomes = new HashSet<String>();
 	protected List<Rule> parsedRules;
 
@@ -436,12 +436,18 @@ public class Engine {
 			}
 			
 			Object o = MVEL.executeExpression(r.getCompiled(), vars);
-			String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
 			if(String.valueOf(o).equals("true")){
 				matchingRules.add(r.getRule());
-                if(log.isLoggable(Level.INFO)) log.info("matched: " + msg);
+				if(log.isLoggable(Level.FINE)) {
+					String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
+					log.fine("matched: " + msg);
+				}
+				
 			}else{
-                if(log.isLoggable(Level.INFO)) log.info("unmatched: " + msg);
+                if(log.isLoggable(Level.FINE)) {
+					String msg = r.getRule().getFullyQualifiedName() + "-{" + r.getRule().getExpression() + "}";
+					log.fine("unmatched: " + msg);
+				}
 			}
 		}
 		
@@ -451,7 +457,7 @@ public class Engine {
 		return matchingRules;
 	}
 	
-	private static final class CompiledRule {
+	protected static final class CompiledRule {
 		private Rule rule;
 		private Serializable compiled;
 		private CompiledRule(Rule rule) {
