@@ -93,7 +93,7 @@ public class Engine {
     /** static variable bindings to be used in addition to the input when executing rules */
     protected final Map<String, Object> statics;
 
-    private List<CompiledRule> rules;
+    protected List<CompiledRule> rules;
 	protected final Set<String> uniqueOutcomes = new HashSet<String>();
 	protected List<Rule> parsedRules;
 
@@ -457,7 +457,7 @@ public class Engine {
 		return matchingRules;
 	}
 	
-	private static final class CompiledRule {
+	protected static final class CompiledRule {
 		private Rule rule;
 		private Serializable compiled;
 		private CompiledRule(Rule rule) {
